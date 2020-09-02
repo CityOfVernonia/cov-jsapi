@@ -24,6 +24,9 @@
     "url": "https://github.com/CityOfVernonia/cov-jsapi/issues"
   },
   "homepage": "https://github.com/CityOfVernonia/cov-jsapi#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "devDependencies": {
     "@types/arcgis-js-api": "4.16.0",
     "@types/jest": "^26.0.13",
