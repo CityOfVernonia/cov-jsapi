@@ -6,6 +6,3 @@ node_js:
 cache: npm
 script:
   - npm run test
-  - npm run lint
-  - npm run prettier
-  - npm run build
