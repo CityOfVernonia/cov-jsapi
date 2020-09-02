@@ -1,4 +1,9 @@
 language: node_js
+node_js:
+  - "node"
+  - "lts/*"
+  - 10
+cache: npm
 script:
   - npm run test
   - npm run lint
