@@ -5,7 +5,6 @@ interface Hash<T> {
 }
 
 declare namespace __cov {
-
   export interface OAuthViewModelProperties extends Object {
     /**
      * esri.portal.Portal instance to sign into.
@@ -17,7 +16,7 @@ declare namespace __cov {
     oAuthInfo: esri.OAuthInfo;
     /**
      * Alternate sign in url.
-     * 
+     *
      * Overrides default `${portal.url}/sharing/rest`.
      */
     signInUrl?: string;
@@ -41,7 +40,7 @@ declare namespace __cov {
   export interface UnitsViewModelProperties {
     /**
      * CSS class string for <select>s.
-     * 
+     *
      * @default 'esri-select'
      */
     selectClass: string;
@@ -103,5 +102,4 @@ declare namespace __cov {
     areaSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
     elevationSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
   }
-  
 }

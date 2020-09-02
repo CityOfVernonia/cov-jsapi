@@ -38,7 +38,7 @@ export default class OAuthViewModel extends Accessor {
 
   /**
    * Alternate sign in url.
-   * 
+   *
    * Overrides default `${portal.url}/sharing/rest`.
    */
   @property()
@@ -84,7 +84,7 @@ export default class OAuthViewModel extends Accessor {
 
   /**
    * Load the view model.
-   * 
+   *
    * @returns Promise<true | false> user signed in.
    */
   load(): Promise<boolean> {

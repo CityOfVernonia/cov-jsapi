@@ -18,7 +18,7 @@ let KEY = 0;
 export default class UnitsViewModel extends Accessor {
   /**
    * CSS class string for <select>s.
-   * 
+   *
    * @default 'esri-select'
    */
   @property()
@@ -134,7 +134,7 @@ export default class UnitsViewModel extends Accessor {
         title={title || ''}
         bind={this}
         onchange={(evt: Event): void => {
-          this.lengthUnit = ((evt.target as HTMLSelectElement).value as esri.LinearUnits);
+          this.lengthUnit = (evt.target as HTMLSelectElement).value as esri.LinearUnits;
         }}
       >
         {this._createUnitOptions(this.lengthUnits, this.lengthUnit.toString())}
@@ -156,7 +156,7 @@ export default class UnitsViewModel extends Accessor {
         title={title || ''}
         bind={this}
         onchange={(evt: Event): void => {
-          this.areaUnit = ((evt.target as HTMLSelectElement).value as esri.ArealUnits);
+          this.areaUnit = (evt.target as HTMLSelectElement).value as esri.ArealUnits;
         }}
       >
         {this._createUnitOptions(this.areaUnits, this.areaUnit.toString())}
