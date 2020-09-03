@@ -1,0 +1,53 @@
+.cov-tabs {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  justify-content: space-between;
+  font-size: 14px;
+
+  li {
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    padding: 6px 7px;
+    width: 100%;
+    min-height: 32px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    color: $interactive-font-color;
+
+    &:hover,
+    &:focus {
+      color: $interactive-font-color--hover;
+      background-color: $background-color--hover;
+    }
+
+    &:active {
+      background-color: $background-color--active;
+    }
+
+    &[aria-selected="true"],
+    &[aria-selected="true"]:hover {
+      pointer-events: none;
+      color: $background-color;
+      background-color: $interactive-font-color;
+    }
+  }
+}
+
+.cov-tabs--content-wrapper {
+  height: 100%;
+  overflow: auto;
+}
+
+.cov-tabs--content {
+  padding: 0.75rem;
+  font-size: 14px;
+  &.cov-tabs--content_no-padding {
+    padding: 0;
+  }
+}

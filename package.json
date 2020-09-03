@@ -6,7 +6,7 @@
     "test": "npm run lint && jest",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\"",
-    "build": "npx tsc"
+    "build": "npx tsc && npx node-sass --output-style compressed src/css/cov.scss > dist/css/cov.css"
   },
   "repository": {
     "type": "git",
@@ -33,9 +33,10 @@
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.4.2",
+    "node-sass": "^4.14.1",
     "prettier": "^2.1.1",
-    "tslib": "^2.0.1",
     "ts-jest": "^26.3.0",
+    "tslib": "^2.0.1",
     "typescript": "^4.0.2"
   }
 }

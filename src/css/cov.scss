@@ -1,0 +1,17 @@
+// arcgis sass functions
+@import "../../node_modules/arcgis-js-api/themes/base/_functions.scss";
+
+// arcgis-js-api sass color variables
+@import "../../node_modules/arcgis-js-api/themes/base/_color.scss";
+
+// arcgis-js-api sass theme core
+@import "../../node_modules/arcgis-js-api/themes/base/_core.scss";
+
+// tabs styles
+@import "tabs";
+
+// range input slider
+@import "slider";
+
+// form and inputs
+@import "form";
