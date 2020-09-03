@@ -129,3 +129,18 @@ declare namespace __cov {
     on(type: 'accepted', listener: () => void): IHandle;
   }
 }
+
+declare module 'cov/viewModels/OAuthViewModel' {
+  import OAuthViewModel = __cov.OAuthViewModel;
+  export = OAuthViewModel;
+}
+
+declare module 'cov/viewModels/UnitsViewModel' {
+  import UnitsViewModel = __cov.UnitsViewModel;
+  export = UnitsViewModel;
+}
+
+declare module 'cov/widgets/Disclaimer' {
+  import Disclaimer = __cov.Disclaimer;
+  export = Disclaimer;
+}
