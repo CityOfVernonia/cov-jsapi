@@ -1,13 +1,13 @@
 {
   "name": "cov-jsapi",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "City of Vernonia for Esri's JavaScript API.",
   "scripts": {
-    "test": "npm run lint && jest",
+    "test": "npm run lint && jest && npm run build",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\"",
-    "build": "npx tsc && npx node-sass --output-style compressed src/css/cov.scss > dist/css/cov.css",
-    "precommit": "npm run prettier && npm run test && npm run build"
+    "build": "npx tsc && npx node-sass src/css/sandstone.scss > dist/css/sandstone.css",
+    "precommit": "npm run prettier && npm run test"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,7 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
+    "bootswatch": "^4.5.2",
     "js-cookie": "^2.2.1"
   }
 }
