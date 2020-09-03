@@ -1,11 +1,14 @@
-// arcgis sass functions
+// arcgis sass theme functions
 @import "../../node_modules/arcgis-js-api/themes/base/_functions.scss";
 
-// arcgis-js-api sass color variables
+// arcgis-js-api sass theme color variables
 @import "../../node_modules/arcgis-js-api/themes/base/_color.scss";
 
+// arcgis-js-api sass theme sizing and placement
+@import "../../node_modules/arcgis-js-api/themes/base/_sizes.scss";
+
 // arcgis-js-api sass theme core
-@import "../../node_modules/arcgis-js-api/themes/base/_core.scss";
+// @import "../../node_modules/arcgis-js-api/themes/base/_core.scss";
 
 // tabs styles
 @import "tabs";
