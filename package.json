@@ -6,7 +6,8 @@
     "test": "npm run lint && jest",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\"",
-    "build": "npx tsc && npx node-sass --output-style compressed src/css/cov.scss > dist/css/cov.css"
+    "build": "npx tsc && npx node-sass --output-style compressed src/css/cov.scss > dist/css/cov.css",
+    "precommit": "npm run prettier && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@types/arcgis-js-api": "4.16.0",
     "@types/jest": "^26.0.13",
+    "@types/js-cookie": "^2.2.6",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "arcgis-js-api": "4.16.2",
@@ -38,5 +40,8 @@
     "ts-jest": "^26.3.0",
     "tslib": "^2.0.1",
     "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "js-cookie": "^2.2.1"
   }
 }

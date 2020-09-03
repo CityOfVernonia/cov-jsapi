@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "declaration": false,
     "noLib": false,
     "preserveConstEnums": true,
@@ -25,7 +27,8 @@
     "skipLibCheck": true
   },
   "types": [
-    "arcgis-js-api"
+    "arcgis-js-api",
+    "js-cookie"
   ],
   "include": [
     "src/**/*"

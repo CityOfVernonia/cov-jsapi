@@ -13,7 +13,9 @@ declare namespace __cov {
     /**
      * esri.identity.OAuthInfo instance to perform authentication against.
      */
+
     oAuthInfo: esri.OAuthInfo;
+
     /**
      * Alternate sign in url.
      *
@@ -37,7 +39,7 @@ declare namespace __cov {
     signOut(): void;
   }
 
-  export interface UnitsViewModelProperties {
+  export interface UnitsViewModelProperties extends Object {
     /**
      * CSS class string for <select>s.
      *
@@ -101,5 +103,29 @@ declare namespace __cov {
     lengthSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
     areaSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
     elevationSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
+  }
+
+  export interface DisclaimerProperties extends esri.WidgetProperties {
+    /**
+     * Disclaimer title (usually the application title).
+     *
+     * @default 'Disclaimer'
+     */
+    title?: string;
+
+    /**
+     * Disclaimer text.
+     *
+     * @default 'There are no warranties, expressed or implied, including the warranty of merchantability or fitness for a particular purpose, accompanying this application.'
+     */
+    disclaimer?: string;
+  }
+
+  export class Disclaimer extends esri.widget {
+    constructor(properties: DisclaimerProperties);
+    title: string;
+    disclaimer: string;
+    static isAccepted(): boolean;
+    on(type: 'accepted', listener: () => void): IHandle;
   }
 }
