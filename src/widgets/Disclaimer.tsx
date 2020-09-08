@@ -32,7 +32,7 @@ export default class Disclaimer extends Widget {
 
   // available in 4.17?
   // @property()
-  // @messageBundle('esri/widgets/Attribution/t9n/Attribution')
+  // @messageBundle('cov/widgets/Disclaimer/t9n/Disclaimer')
   // messages: DisclaimerMessages = null;
 
   static isAccepted(): boolean {
