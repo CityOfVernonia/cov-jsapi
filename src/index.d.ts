@@ -9,11 +9,11 @@ declare namespace __cov {
     /**
      * esri.portal.Portal instance to sign into.
      */
+
     portal: esri.Portal;
     /**
      * esri.identity.OAuthInfo instance to perform authentication against.
      */
-
     oAuthInfo: esri.OAuthInfo;
 
     /**
@@ -128,6 +128,27 @@ declare namespace __cov {
     static isAccepted(): boolean;
     on(type: 'accepted', listener: () => void): IHandle;
   }
+
+  export interface LayerListLegendProperties extends esri.WidgetProperties {
+    /**
+     * Map or scene view.
+     */
+    view?: esri.MapView | esri.SceneView;
+
+    /**
+     * Any and all LayerList widget properties.
+     */
+    layerListProperties?: esri.LayerListProperties;
+
+    /**
+     * Any and all Legend widget properties.
+     */
+    legendProperties?: esri.LegendProperties;
+  }
+
+  export class LayerListLegend extends esri.Widget {
+    constructor(properties: LayerListLegendProperties);
+  }
 }
 
 declare module 'cov/viewModels/OAuthViewModel' {
@@ -143,4 +164,9 @@ declare module 'cov/viewModels/UnitsViewModel' {
 declare module 'cov/widgets/Disclaimer' {
   import Disclaimer = __cov.Disclaimer;
   export = Disclaimer;
+}
+
+declare module 'cov/widgets/LayerListLegend' {
+  import LayerListLegend = __cov.LayerListLegend;
+  export = LayerListLegend;
 }

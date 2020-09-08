@@ -1,0 +1,17 @@
+.cov-layer-list-legend {
+  display: flex;
+  flex-flow: column;
+
+  // esri legend overrides
+  .esri-legend__service {
+    padding: 0.5rem;
+  }
+  .esri-widget__heading,
+  .esri-legend__layer-table {
+    margin-bottom: 0.25rem;
+  }
+
+  .esri-legend__symbol {
+    padding: 2px 0;
+  } 
+}
