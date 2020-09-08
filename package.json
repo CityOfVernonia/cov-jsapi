@@ -6,7 +6,7 @@
     "test": "npm run lint && jest && npm run build",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\"",
-    "build": "npx tsc && npx node-sass src/css/sandstone.scss > dist/css/sandstone.css",
+    "build": "npx tsc && npx node-sass src/css/__test.scss > dist/test.css",
     "precommit": "npm run prettier && npm run test"
   },
   "repository": {

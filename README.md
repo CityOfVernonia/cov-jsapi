@@ -38,34 +38,9 @@ module.exports = {
 };
 ```
 
-## Note
-
-This package is intended for and used with [TypeScript](https://www.typescriptlang.org/) and [webpack](https://webpack.js.org/) projects. Example applications can be found [here](https://github.com/Esri/arcgis-js-cli) and [here](https://github.com/Esri/jsapi-resources). The code is compiled as AMD in the `dist` directory, however it is not been tested in a production environment.
-
-## CSS
+## CSS and Theming
 
 This package uses [Sass](https://sass-lang.com/). The included widgets rely on shared CSS for tabs, forms, etc., as well as `arcgis-js-api` Sass variables.
-
-```scss
-// arcgis sass theme functions
-@import "~arcgis-js-api/themes/base/functions";
-
-// arcgis-js-api sass theme color variables
-@import "~arcgis-js-api/themes/base/color";
-
-// arcgis-js-api sass theme sizing and placement
-@import "~arcgis-js-api/themes/base/sizes";
-
-// cov shared widget styles
-@import "~cov-jsapi/src/css/tabs";
-@import "~cov-jsapi/src/css/form";
-@import "~cov-jsapi/src/css/slider";
-
-// disclaimer widget
-@import "~cov-jsapi/src/widgets/Disclaimer/styles/Disclaimer";
-```
-
-## Theming
 
 The [City of Vernonia](https://www.vernonia-or.gov/) uses the [Sandstone](https://bootswatch.com/sandstone/) theme for its websites and apps. For conformity the sandstone `arcgis-js-api` theme is provided via `src/css/sandstone.scss`.
 

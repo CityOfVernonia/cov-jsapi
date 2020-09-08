@@ -1,0 +1,16 @@
+// arcgis sass theme functions
+@import "../../node_modules/arcgis-js-api/themes/base/functions";
+
+// arcgis-js-api sass theme color variables
+@import "../../node_modules/arcgis-js-api/themes/base/color";
+
+// arcgis-js-api sass theme sizing and placement
+@import "../../node_modules/arcgis-js-api/themes/base/sizes";
+
+// cov shared widget styles
+@import "tabs";
+@import "form";
+@import "slider";
+
+// disclaimer widget
+@import "../widgets/Disclaimer/styles/Disclaimer";

@@ -1,12 +1,12 @@
 // bootswatch sandstone theme
-@import "../../node_modules/bootswatch/dist/sandstone/variables";
+@import "~/bootswatch/dist/sandstone/variables";
 
 // arcgis calcite color variables
 // don't need calcite colors for this theme
 // @import "~arcgis-js-api/themes/base/colors/scss/variables.scss";
 
 // arcgis sass theme functions
-@import "../../node_modules/arcgis-js-api/themes/base/functions";
+@import "~/arcgis-js-api/themes/base/functions";
 
 // arcgis color variables
 // overrides defaults in @import "~arcgis-js-api/themes/base/_color";
@@ -107,7 +107,7 @@ $font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
 // arcgis core will handle the rest
-@import "../../node_modules/arcgis-js-api/themes/base/core";
+@import "~/arcgis-js-api/themes/base/core";
 
 // basic styles
 * {
