@@ -6,7 +6,7 @@
 
 describe('OAuthViewModel', () => {
   // let mod: OAuthViewModel;
-  
+
   // beforeEach(async () => {
   //   const portal = new Portal();
   //   await portal.load();
@@ -23,5 +23,4 @@ describe('OAuthViewModel', () => {
   test('how about a successful test', () => {
     expect(1 + 1).toEqual(2);
   });
-
 });
