@@ -147,7 +147,7 @@ declare namespace __cov {
   }
 
   export class LayerListLegend extends esri.Widget {
-    constructor(properties: LayerListLegendProperties);
+    constructor(properties?: LayerListLegendProperties);
   }
 }
 
