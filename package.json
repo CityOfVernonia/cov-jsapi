@@ -3,11 +3,12 @@
   "version": "0.1.5",
   "description": "City of Vernonia for Esri's JavaScript API.",
   "scripts": {
-    "test": "npm run lint && jest && npm run build",
-    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\" && prettier --single-quote --write \"__tests__/**/*.ts\"",
     "build": "npx tsc && npx node-sass src/css/__test.scss > dist/test.css",
-    "precommit": "npm run prettier && npm run test"
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "precommit": "npm run prettier && npm run test",
+    "prettier": "prettier --single-quote --write \"src/**/*.ts?(x)\" && prettier --single-quote --write \"__tests__/**/*.ts\"",
+    "start": "webpack-dev-server --mode development --open --https",
+    "test": "npm run lint && jest && npm run build"
   },
   "repository": {
     "type": "git",
@@ -26,20 +27,32 @@
   },
   "homepage": "https://github.com/CityOfVernonia/cov-jsapi#readme",
   "devDependencies": {
+    "@arcgis/webpack-plugin": "^4.16.3",
     "@types/arcgis-js-api": "4.16.0",
     "@types/jest": "^26.0.13",
     "@types/js-cookie": "^2.2.6",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "arcgis-js-api": "4.16.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^4.3.0",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
+    "html-loader": "^1.3.0",
+    "html-webpack-plugin": "3.2.0",
     "jest": "^26.4.2",
+    "mini-css-extract-plugin": "^0.11.1",
     "node-sass": "^4.14.1",
     "prettier": "^2.1.1",
+    "resolve-url-loader": "2.3.1",
+    "sass-loader": "^10.0.2",
     "ts-jest": "^26.3.0",
+    "ts-loader": "^8.0.3",
     "tslib": "^2.0.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "bootswatch": "^4.5.2",

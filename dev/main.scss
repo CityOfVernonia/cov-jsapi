@@ -1,0 +1,16 @@
+@import "../node_modules/arcgis-js-api/themes/base/core";
+
+html,
+body,
+.cov-app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@import "../src/css/tabs.scss";
+@import "../src/css/form.scss";
+@import "../src/css/slider.scss";
+
+@import "../src/widgets/LayerListLegend/styles/LayerListLegend.scss";
