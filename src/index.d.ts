@@ -148,6 +148,57 @@ declare namespace __cov {
 
   export class LayerListLegend extends esri.Widget {
     constructor(properties?: LayerListLegendProperties);
+    view: esri.MapView | esri.SceneView;
+    layerListProperties: esri.LayerListProperties;
+    legendProperties: esri.LegendProperties;
+  }
+
+  export interface PrintSnapshotProperties extends esri.WidgetProperties {
+    /**
+     * Map view.
+     */
+    view?: esri.MapView;
+
+    /**
+     * URL of print service.
+     */
+    printServiceUrl: string;
+
+    /**
+     * Default title for title input.
+     */
+    defaultTitle?: string;
+
+    /**
+     * Array of available print service layouts in layout select.
+     */
+    layouts?: string[];
+
+    /**
+     * Array of available file formats in format select.
+     */
+    formats?: string[];
+
+    /**
+     * Any additional layout options to mix into print template.
+     */
+    layoutOptions?: esri.PrintTemplateLayoutOptions;
+
+    /**
+     * Copyright right text to add to snapshot images.
+     */
+    copyrightText?: string;
+  }
+
+  export class PrintSnapshot extends esri.Widget {
+    constructor(properties: PrintSnapshotProperties);
+    view: esri.MapView;
+    printServiceUrl: string;
+    defaultTitle: string;
+    layouts: string[];
+    formats: string[];
+    layoutOptions: esri.PrintTemplateLayoutOptions;
+    copyrightText: string;
   }
 }
 
@@ -169,4 +220,9 @@ declare module 'cov/widgets/Disclaimer' {
 declare module 'cov/widgets/LayerListLegend' {
   import LayerListLegend = __cov.LayerListLegend;
   export = LayerListLegend;
+}
+
+declare module 'cov/widgets/PrintSnapshot' {
+  import PrintSnapshot = __cov.PrintSnapshot;
+  export = PrintSnapshot;
 }

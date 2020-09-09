@@ -1,0 +1,87 @@
+.cov-print-snapshot {
+  display: flex;
+  flex-flow: column;
+  min-width: 280px;
+  .esri-input {
+    width: 100%;
+  }
+  a {
+    text-decoration: none;
+    color: $interactive-font-color;
+    &:hover {
+      color: $interactive-font-color--hover;
+    }
+  }
+}
+
+.cov-print-snapshot--print-results {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0.5rem 0;
+}
+
+.cov-print-snapshot--print-result {
+  display: flex;
+  align-items: center;
+  margin: 0.75rem 0;
+  font-size: 14px;
+  a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  &:first-child {
+    margin-top: 0.5rem;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cov-print-snapshot--snapshot-results {
+  list-style: none;
+  padding: 0;
+  margin: 0 0.5rem;
+
+  li:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cov-print-snapshot--snapshot-result {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  margin: 0.75rem 0;
+
+  img {
+    width: 120px;
+    height: auto;
+    margin-right: 1rem;
+  }
+
+  p {
+    margin: 0;
+    line-height: 2;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.cov-print-snapshot--icon {
+  margin-right: 0.5rem;
+  font-size: 16px;
+}
+
+.cov-print-snapshot--error {
+  color: $font-color--error;
+}
+
+.cov-print-snapshot--masking-div {
+  display: none;
+  position: absolute;
+  background: rgba($font-color--error, 0.1);
+  border: 3px dashed $font-color--error;
+}
