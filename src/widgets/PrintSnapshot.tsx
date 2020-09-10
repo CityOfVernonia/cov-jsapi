@@ -72,19 +72,31 @@ let KEY = 0;
 
 @subclass('cov.widgets.Print')
 export default class Print extends Widget {
+  /**
+   * Map view.
+   */
   @property({
     aliasOf: 'viewModel.view',
   })
   view: esri.MapView;
 
+  /**
+   * URL of print service.
+   */
   @property({
     aliasOf: 'viewModel.printServiceUrl',
   })
   printServiceUrl: string;
 
+  /**
+   * Default title for title input.
+   */
   @property()
   defaultTitle: string;
 
+  /**
+   * Array of available print service layouts in layout select.
+   */
   @property()
   layouts = [
     'Letter ANSI A Landscape',
@@ -93,12 +105,21 @@ export default class Print extends Widget {
     'Tabloid ANSI B Portrait',
   ];
 
+  /**
+   * Array of available file formats in format select.
+   */
   @property()
   formats = ['PDF', 'PNG32', 'PNG8', 'JPG', 'GIF', 'EPS', 'SVG', 'SVGZ'];
 
+  /**
+   * Any additional layout options to mix into print template.
+   */
   @property()
   layoutOptions: esri.PrintTemplateLayoutOptions = {};
 
+  /**
+   * Copyright right text to add to snapshot images.
+   */
   @property()
   copyrightText = 'All Humanity';
 
@@ -327,6 +348,7 @@ export default class Print extends Widget {
     );
   }
 
+  // print form submit event prints map
   private _print(evt: Event) {
     evt.preventDefault();
     const target = evt.target as HTMLFormElement;
@@ -363,6 +385,7 @@ export default class Print extends Widget {
       .then(this.scheduleRender.bind(this));
   }
 
+  // open snapshot image in new tab
   private _open(base64ImageData: string, contentType: string) {
     const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
     const byteArrays = [];
@@ -380,6 +403,7 @@ export default class Print extends Widget {
     window.open(blobUrl, '_blank');
   }
 
+  // download a snapshot image
   private _download(dataUrl: string, titleText: string) {
     const a = document.createElement('a');
     a.setAttribute('href', dataUrl);
@@ -390,6 +414,7 @@ export default class Print extends Widget {
     document.body.removeChild(a);
   }
 
+  // snapshot form submit event
   private _snapshot(evt: Event | any, area?: esri.MapViewTakeScreenshotOptionsArea) {
     if (evt.preventDefault && typeof evt.preventDefault === 'function') {
       evt.preventDefault();
@@ -436,6 +461,7 @@ export default class Print extends Widget {
       .then(this.scheduleRender.bind(this));
   }
 
+  // area snapshot click event
   private _areaSnapshot(evt: { target: HTMLButtonElement }) {
     const view = this.view;
     const form = evt.target.parentNode?.parentNode?.parentNode as HTMLFormElement;
