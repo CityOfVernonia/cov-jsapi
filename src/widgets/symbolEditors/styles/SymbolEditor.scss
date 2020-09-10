@@ -1,0 +1,41 @@
+.cov-symbol-editor--input-row {
+  display: flex;
+  flex-flow: row;
+  margin-bottom: 0.75rem;
+  & > div {
+    margin: 0 0.5rem;
+    width: 100%;
+  }
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.cov-symbol-editor--label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.cov-color-picker {
+  box-sizing: border-box;
+  .cov-color-picker--rows {
+    display: flex;
+    flex-flow: column;
+  }
+  .cov-color-picker--row {
+    display: flex;
+    flex-flow: row;
+  }
+  .cov-color-picker--color {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    &.cov-color-picker--color-selected {
+      border: 1px solid $border-color--active;
+    }
+  }
+}

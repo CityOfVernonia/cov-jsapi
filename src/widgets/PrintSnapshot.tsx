@@ -374,7 +374,7 @@ export default class Print extends Widget {
           },
         }),
       )
-      .then((res: any) => {
+      .then((res: { url: string }) => {
         result.url = res.url;
         result.state = 'printed';
       })
@@ -404,7 +404,7 @@ export default class Print extends Widget {
   }
 
   // download a snapshot image
-  private _download(dataUrl: string, titleText: string) {
+  private _download(dataUrl: string, titleText: string): void {
     const a = document.createElement('a');
     a.setAttribute('href', dataUrl);
     a.setAttribute('download', titleText);
@@ -415,9 +415,9 @@ export default class Print extends Widget {
   }
 
   // snapshot form submit event
-  private _snapshot(evt: Event | any, area?: esri.MapViewTakeScreenshotOptionsArea) {
-    if (evt.preventDefault && typeof evt.preventDefault === 'function') {
-      evt.preventDefault();
+  private _snapshot(evt: Event | { target: HTMLFormElement }, area?: esri.MapViewTakeScreenshotOptionsArea): void {
+    if ((evt as Event).preventDefault && typeof (evt as Event).preventDefault === 'function') {
+      (evt as Event).preventDefault();
     }
     const target = evt.target as HTMLFormElement;
     const titleText = target.TITLE.value || this.defaultTitle || 'Map';

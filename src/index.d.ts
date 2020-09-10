@@ -5,6 +5,10 @@ interface Hash<T> {
 }
 
 declare namespace __cov {
+  ///////////////////////////////////////////////////////////////////
+  // view models
+  ///////////////////////////////////////////////////////////////////
+
   export interface OAuthViewModelProperties extends Object {
     /**
      * esri.portal.Portal instance to sign into.
@@ -105,6 +109,10 @@ declare namespace __cov {
     elevationSelect(name?: null | string, title?: null | string): tsx.JSX.Element;
   }
 
+  ///////////////////////////////////////////////////////////////////
+  // widgets
+  ///////////////////////////////////////////////////////////////////
+
   export interface DisclaimerProperties extends esri.WidgetProperties {
     /**
      * Disclaimer title (usually the application title).
@@ -200,6 +208,61 @@ declare namespace __cov {
     layoutOptions: esri.PrintTemplateLayoutOptions;
     copyrightText: string;
   }
+
+  export interface SymbolEditorProperties extends esri.WidgetProperties {
+    /**
+     * The graphic for which to edit the symbol of.
+     */
+    graphic: esri.Graphic;
+  }
+
+  class SymbolEditor extends esri.Widget {
+    constructor(properties: SymbolEditorProperties);
+    graphic: esri.Graphic;
+    symbol: esri.Symbol;
+    setSymbolProperty(property: string, evt?: Event, value?: string | number): void;
+  }
+
+  export class SimpleMarkerEditor extends SymbolEditor {
+    symbol: esri.SimpleMarkerSymbol;
+  }
+
+  export class SimpleLineEditor extends SymbolEditor {
+    symbol: esri.SimpleLineSymbol;
+  }
+
+  export class SimpleFillEditor extends SymbolEditor {
+    symbol: esri.SimpleFillSymbol;
+  }
+
+  export interface ColorPickerProperties extends esri.WidgetProperties {
+    /**
+     * Array of hex colors to display.
+     *
+     * @default [https://clrs.cc/]
+     */
+    palette?: string[];
+
+    /**
+     * Number of colors per row.
+     *
+     * @default 8
+     */
+    colorsPerRow?: number;
+
+    /**
+     * `esri/Color` value to init widget with.
+     */
+    value?: esri.Color;
+  }
+
+  export class ColorPicker extends esri.Widget {
+    constructor(properties: ColorPickerProperties);
+    palette: string[];
+    colorsPerRow: number;
+    value: esri.Color;
+    on(type: 'accepted', listener: () => esri.Color): IHandle;
+  }
 }
 
 declare module 'cov/viewModels/OAuthViewModel' {
@@ -225,4 +288,19 @@ declare module 'cov/widgets/LayerListLegend' {
 declare module 'cov/widgets/PrintSnapshot' {
   import PrintSnapshot = __cov.PrintSnapshot;
   export = PrintSnapshot;
+}
+
+declare module 'cov/widgets/symbolEditors/SimpleMarkerEditor' {
+  import SimpleMarkerEditor = __cov.SimpleMarkerEditor;
+  export = SimpleMarkerEditor;
+}
+
+declare module 'cov/widgets/symbolEditors/SimpleLineEditor' {
+  import SimpleLineEditor = __cov.SimpleLineEditor;
+  export = SimpleLineEditor;
+}
+
+declare module 'cov/widgets/symbolEditors/SimpleFillEditor' {
+  import SimpleFillEditor = __cov.SimpleFillEditor;
+  export = SimpleFillEditor;
 }
