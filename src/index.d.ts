@@ -6,6 +6,11 @@ interface Hash<T> {
 
 declare namespace __cov {
   ///////////////////////////////////////////////////////////////////
+  // popups
+  ///////////////////////////////////////////////////////////////////
+  export class TaxLotPopup extends esri.PopupTemplate {}
+
+  ///////////////////////////////////////////////////////////////////
   // view models
   ///////////////////////////////////////////////////////////////////
 
@@ -263,6 +268,11 @@ declare namespace __cov {
     value: esri.Color;
     on(type: 'accepted', listener: () => esri.Color): IHandle;
   }
+}
+
+declare module 'cov/popups/TaxLotPopup' {
+  import TaxLotPopup = __cov.TaxLotPopup;
+  export = TaxLotPopup;
 }
 
 declare module 'cov/viewModels/OAuthViewModel' {
