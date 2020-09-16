@@ -23,7 +23,6 @@ const CSS = {
 
 @subclass('cov.widgets.OAuthSignIn')
 export default class OAuthSignIn extends Widget {
-
   @property()
   message = `Please sign into this application.`;
 
@@ -43,9 +42,16 @@ export default class OAuthSignIn extends Widget {
         <div style={STYLES.container}>
           <p>{this.message}</p>
           <p>
-            <button class={CSS.button} style={STYLES.button} bind={this} onclick={() => {
-              this.oAuthViewModel.signIn();
-            }}>{this.buttonText}</button>
+            <button
+              class={CSS.button}
+              style={STYLES.button}
+              bind={this}
+              onclick={() => {
+                this.oAuthViewModel.signIn();
+              }}
+            >
+              {this.buttonText}
+            </button>
           </p>
         </div>
       </div>

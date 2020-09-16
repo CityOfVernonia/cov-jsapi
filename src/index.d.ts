@@ -274,12 +274,12 @@ declare namespace __cov {
      * OAuthViewModel to handle sign in.
      */
     oAuthViewModel: OAuthViewModel;
-    
+
     /**
      * Message text.
      */
     message?: string;
-    
+
     /**
      * Button text.
      */
