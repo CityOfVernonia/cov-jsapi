@@ -268,6 +268,29 @@ declare namespace __cov {
     value: esri.Color;
     on(type: 'accepted', listener: () => esri.Color): IHandle;
   }
+
+  export interface OAuthSignInProperties extends esri.WidgetProperties {
+    /**
+     * OAuthViewModel to handle sign in.
+     */
+    oAuthViewModel: OAuthViewModel;
+    
+    /**
+     * Message text.
+     */
+    message?: string;
+    
+    /**
+     * Button text.
+     */
+    buttonText?: string;
+  }
+
+  export class OAuthSignIn extends esri.Widget {
+    constructor(properties: OAuthSignInProperties);
+    message: string;
+    buttonText: string;
+  }
 }
 
 declare module 'cov/popups/TaxLotPopup' {
@@ -313,4 +336,9 @@ declare module 'cov/widgets/symbolEditors/SimpleLineEditor' {
 declare module 'cov/widgets/symbolEditors/SimpleFillEditor' {
   import SimpleFillEditor = __cov.SimpleFillEditor;
   export = SimpleFillEditor;
+}
+
+declare module 'cov/widgets/OAuthSignIn' {
+  import OAuthSignIn = __cov.OAuthSignIn;
+  export = OAuthSignIn;
 }
