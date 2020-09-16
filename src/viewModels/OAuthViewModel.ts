@@ -10,15 +10,14 @@ import Accessor from 'esri/core/Accessor';
 
 import { property, subclass } from 'esri/core/accessorSupport/decorators';
 
-import esriId, {
-  registerOAuthInfos,
-  checkSignInStatus,
-  // most useful esriId method and not exposed :/
-  // @ts-ignore
-  oAuthSignIn,
-  findServerInfo,
-  destroyCredentials,
-} from 'esri/identity/IdentityManager';
+import esriId from // registerOAuthInfos,
+// checkSignInStatus,
+// most useful esriId method and not exposed :/
+// @ts-ignore
+// oAuthSignIn,
+// findServerInfo,
+// destroyCredentials,
+'esri/identity/IdentityManager';
 
 import Error from 'esri/core/Error';
 
@@ -76,7 +75,7 @@ export default class OAuthViewModel extends Accessor {
 
   constructor(properties: cov.OAuthViewModelProperties) {
     super(properties);
-    registerOAuthInfos([properties.oAuthInfo]);
+    esriId.registerOAuthInfos([properties.oAuthInfo]);
     // set `oAuthViewModel` on esriId to access auth, user, etc
     // via `esriId` in other modules and widgets
     esriId['oAuthViewModel'] = this;
@@ -91,7 +90,8 @@ export default class OAuthViewModel extends Accessor {
     return new Promise((resolve, reject) => {
       if (this.portal.loaded) {
         // check for sign in
-        checkSignInStatus(this.portal.url)
+        esriId
+          .checkSignInStatus(this.portal.url)
           .then((credential: esri.Credential) => {
             this.credential = credential;
             this.user = this.portal.user;
@@ -122,7 +122,7 @@ export default class OAuthViewModel extends Accessor {
    */
   signIn(): void {
     const url = this.signInUrl || `${this.portal.url}/sharing/rest`;
-    oAuthSignIn(url, findServerInfo(url), this.oAuthInfo, {
+    esriId['oAuthSignIn'](url, esriId.findServerInfo(url), this.oAuthInfo, {
       oAuthPopupConfirmation: false,
       signal: new AbortController().signal,
     })
@@ -138,7 +138,7 @@ export default class OAuthViewModel extends Accessor {
    * Sign out of the application.
    */
   signOut(): void {
-    destroyCredentials();
+    esriId.destroyCredentials();
     window.location.reload();
   }
 }
