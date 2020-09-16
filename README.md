@@ -54,14 +54,14 @@ The [City of Vernonia](https://www.vernonia-or.gov/) uses the [Sandstone](https:
 
 ```scss
 // bootswatch sandstone theme
-@import "~/bootswatch/dist/sandstone/variables";
+@import "~bootswatch/dist/sandstone/variables";
 
 // arcgis calcite color variables
 // don't need calcite colors for this theme
 // @import "~arcgis-js-api/themes/base/colors/scss/variables.scss";
 
 // arcgis sass theme functions
-@import "~/arcgis-js-api/themes/base/functions";
+@import "~arcgis-js-api/themes/base/functions";
 
 // arcgis color variables
 // overrides defaults in @import "~arcgis-js-api/themes/base/_color";
@@ -82,7 +82,7 @@ $button-color--bright: $teal !default;
 $button-color--hover: darken($button-color, 10%) !default;
 $button-color--inverse: $interactive-font-color--inverse !default;
 $heading-color: $font-color !default;
-$bacground-color--overlay: rgba(0, 0, 0, 0.7) !default;
+$background-color--overlay: rgba(0, 0, 0, 0.7) !default;
 $opacity--disabled: 0.4 !default;
 $opacity--sortable: 0.75 !default;
 $interactive-font-color--disabled: rgba($interactive-font-color, $opacity--disabled) !default;
@@ -163,7 +163,7 @@ $font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
 // arcgis core will handle the rest
-@import "~/arcgis-js-api/themes/base/core";
+@import "~arcgis-js-api/themes/base/core";
 
 // basic styles
 * {
@@ -172,6 +172,8 @@ $font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   font-family: $font-family;
   line-height: 1.55rem;
   font-feature-settings: "liga" 1, "calt" 0;
@@ -179,8 +181,8 @@ body {
   font-size: 14px;
 }
 
-$link: $green;
-$link-hover: darken($link, 10%);
+$link: $interactive-font-color;
+$link-hover: $interactive-font-color--hover;
 
 a {
   color: $link;
