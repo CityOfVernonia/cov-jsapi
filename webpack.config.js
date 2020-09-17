@@ -105,12 +105,12 @@ module.exports = (_, args) => {
       }),
 
       // oauth callback
-      // new HtmlWebpackPlugin({
-      //   template: './src/oauth-callback.html',
-      //   filename: './oauth-callback.html',
-      //   chunksSortMode: 'none',
-      //   inject: false,
-      // }),
+      new HtmlWebpackPlugin({
+        template: './dev/oauth-callback.html',
+        filename: './oauth-callback.html',
+        chunksSortMode: 'none',
+        inject: false,
+      }),
 
       // chunk css
       new MiniCssExtractPlugin({
