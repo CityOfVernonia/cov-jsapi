@@ -291,6 +291,61 @@ declare namespace __cov {
     message: string;
     buttonText: string;
   }
+
+  export interface MapNavigationProperties extends esri.WidgetProperties {
+    /**
+     * Map view.
+     */
+    view?: esri.MapView;
+
+    /**
+     * Include compass.
+     *
+     * @default true
+     */
+    compass?: boolean;
+
+    /**
+     * Include home.
+     *
+     * @default true
+     */
+    home?: boolean;
+
+    /**
+     * Include locate.
+     *
+     * @default true
+     */
+    locate?: boolean;
+
+    /**
+     * Include fullscreen.
+     *
+     * @default true
+     */
+    fullscreen?: boolean;
+
+    /**
+     * Fullscreen HTML element.
+     * An element or a querySelector string.
+     */
+    fullscreenElement?: string | HTMLElement;
+  }
+
+  export class MapNavigation extends esri.Widget {
+    constructor(properties: MapNavigationProperties);
+    view: esri.MapView;
+    compass: boolean;
+    home: boolean;
+    locate: boolean;
+    fullscreen: boolean;
+    fullscreenElement: string | HTMLElement;
+    protected zoomViewModel: esri.ZoomViewModel;
+    protected homeViewModel: esri.HomeViewModel;
+    protected locateViewModel: esri.LocateViewModel;
+    protected fullscreenViewModel: esri.FullscreenViewModel;
+  }
 }
 
 declare module 'cov/popups/TaxLotPopup' {
@@ -341,4 +396,9 @@ declare module 'cov/widgets/symbolEditors/SimpleFillEditor' {
 declare module 'cov/widgets/OAuthSignIn' {
   import OAuthSignIn = __cov.OAuthSignIn;
   export = OAuthSignIn;
+}
+
+declare module 'cov/widgets/MapNavigation' {
+  import MapNavigation = __cov.MapNavigation;
+  export = MapNavigation;
 }

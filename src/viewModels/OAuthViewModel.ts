@@ -10,14 +10,17 @@ import Accessor from 'esri/core/Accessor';
 
 import { property, subclass } from 'esri/core/accessorSupport/decorators';
 
-import esriId from // registerOAuthInfos,
-// checkSignInStatus,
-// most useful esriId method and not exposed :/
-// @ts-ignore
-// oAuthSignIn,
-// findServerInfo,
-// destroyCredentials,
-'esri/identity/IdentityManager';
+// webpack does not like this import of IdentityManager when part of a separate package
+// import {
+//   registerOAuthInfos,
+//   checkSignInStatus,
+//   // @ts-ignore
+//   oAuthSignIn,
+//   findServerInfo,
+//   destroyCredentials,
+// } from 'esri/identity/IdentityManager';
+
+import esriId from 'esri/identity/IdentityManager';
 
 import Error from 'esri/core/Error';
 
