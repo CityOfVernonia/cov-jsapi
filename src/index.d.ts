@@ -8,7 +8,10 @@ declare namespace __cov {
   ///////////////////////////////////////////////////////////////////
   // popups
   ///////////////////////////////////////////////////////////////////
+
   export class TaxLotPopup extends esri.PopupTemplate {}
+
+  export class WaterMeterPopup extends esri.PopupTemplate {}
 
   ///////////////////////////////////////////////////////////////////
   // view models
@@ -346,11 +349,30 @@ declare namespace __cov {
     protected locateViewModel: esri.LocateViewModel;
     protected fullscreenViewModel: esri.FullscreenViewModel;
   }
+
+  ///////////////////////////////////////////////////////////////////
+  // apps
+  ///////////////////////////////////////////////////////////////////
+  export interface WaterMeterEditorProperties extends esri.WidgetProperties {
+    layerPortalItemId: string;
+    layers?: esri.FeatureLayer[];
+  }
+
+  export class WaterMeterEditor extends esri.Widget {
+    constructor(properties: WaterMeterEditorProperties);
+    layerPortalItemId: string;
+    basemapPortalItemId: string;
+  }
 }
 
 declare module 'cov/popups/TaxLotPopup' {
   import TaxLotPopup = __cov.TaxLotPopup;
   export = TaxLotPopup;
+}
+
+declare module 'cov/popups/WaterMeterPopup' {
+  import WaterMeterPopup = __cov.WaterMeterPopup;
+  export = WaterMeterPopup;
 }
 
 declare module 'cov/viewModels/OAuthViewModel' {
@@ -401,4 +423,9 @@ declare module 'cov/widgets/OAuthSignIn' {
 declare module 'cov/widgets/MapNavigation' {
   import MapNavigation = __cov.MapNavigation;
   export = MapNavigation;
+}
+
+declare module 'cov/apps/WaterMeterEditor' {
+  import WaterMeterEditor = __cov.WaterMeterEditor;
+  export = WaterMeterEditor;
 }

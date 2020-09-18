@@ -126,6 +126,9 @@ module.exports = (_, args) => {
         path.resolve(__dirname, '/src'),
         path.resolve(__dirname, 'node_modules/'),
       ],
+      alias: {
+        cov: path.resolve(__dirname, '/src'),
+      },
       extensions: ['.ts', '.tsx', '.mjs', '.js', '.scss', '.css'],
     },
 

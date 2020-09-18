@@ -1,0 +1,73 @@
+.cov-water-meter-editor--hidden {
+  display: none;
+}
+
+.cov-water-meter-editor--header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 40px;
+  font-family: $font-family;
+  background-color: $button-color;
+  color: $background-color;
+  font-weight: 100;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0 0 0 1.5rem;
+    font-size: 20px;
+  }
+}
+
+.cov-water-meter-editor--view {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  bottom: 0;
+  left: 400px;
+}
+
+.cov-water-meter-editor--side {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  width: 400px;
+  display: flex;
+  flex-flow: column;
+
+  .esri-feature-form {
+    background-color: $background-color;
+  }
+}
+
+.cov-water-meter-editor--success,
+.cov-water-meter-editor--error {
+  margin: 1rem 0 0;
+  padding: 1rem;
+  border-radius: 3px;
+}
+
+.cov-water-meter-editor--success {
+  background-color: $Calcite_Green_100;
+  color: $Calcite_Green_a250;
+}
+
+.cov-water-meter-editor--error {
+  background-color: $Calcite_Red_100;
+  color: $Calcite_Red_a250;
+}
+
+.esri-feature-form {
+  h1.esri-widget__heading {
+    font-size: 14px;
+  }
+}
+
+.esri-search {
+  width: 300px;
+}
