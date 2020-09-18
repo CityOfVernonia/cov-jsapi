@@ -223,17 +223,20 @@ export default class WaterMeterEditor extends Widget {
       view.map.addMany(this.layers);
     }
 
-    this.layer = new FeatureLayer({
+    const layer = (this.layer = new FeatureLayer({
       portalItem: new PortalItem({
         id: this.layerPortalItemId,
       }),
       minScale: 24000,
-      popupTemplate: new WaterMeterEditorPopup(),
-    });
-    view.map.add(this.layer);
+      labelsVisible: false,
+      popupTemplate: new WaterMeterEditorPopup({
+        view,
+      }),
+    }));
+    view.map.add(layer);
 
-    serviceForm.layer = this.layer;
-    meterForm.layer = this.layer;
+    serviceForm.layer = layer;
+    meterForm.layer = layer;
 
     watch(view.popup, ['selectedFeature', 'visible'], this._setFormFeature.bind(this));
 
@@ -249,7 +252,7 @@ export default class WaterMeterEditor extends Widget {
         locationEnabled: false,
         sources: [
           new LayerSearchSource({
-            layer: this.layer,
+            layer: layer,
             outFields: ['*'],
             searchFields: ['WSC_ID', 'ADDRESS'],
             suggestionTemplate: '{WSC_ID} - {ADDRESS}',

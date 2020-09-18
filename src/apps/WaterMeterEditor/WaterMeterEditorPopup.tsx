@@ -12,16 +12,24 @@ import CustomContent from 'esri/popup/content/CustomContent';
 
 interface ContentProperties extends esri.WidgetProperties {
   graphic: esri.Graphic;
+  view: esri.MapView;
 }
 
-const CSS = {
-  th: 'esri-feature__field-header',
-  td: 'esri-feature__field-data',
-  button: 'esri-button',
-};
+interface WaterMeterEditorPopupProperties extends esri.PopupTemplateProperties {
+  view: esri.MapView;
+}
+
+// const CSS = {
+//   th: 'esri-feature__field-header',
+//   td: 'esri-feature__field-data',
+//   button: 'esri-button',
+// };
 
 @subclass('cov.apps.WaterMeterEditor.WaterMeterEditorPopup.Content')
 class Content extends Widget {
+  @property()
+  view: esri.MapView;
+
   @property()
   graphic: esri.Graphic;
 
@@ -37,18 +45,27 @@ class Content extends Widget {
   }
 
   render(): tsx.JSX.Element {
-    // const attributes = this.graphic.attributes;
+    const attributes = this.graphic.attributes;
 
     return (
       <div>
-        <button class={CSS.button}>Edit Location</button>
+        {/* <button class={CSS.button} bind={this} onclick={this._editGeometry}>Edit Location</button> */}
+
+        {attributes.SEWER}
       </div>
     );
   }
+
+  // private _editGeometry() {
+
+  // }
 }
 
 @subclass('cov.apps.WaterMeterEditor.WaterMeterEditorPopup')
 export default class WaterMeterEditorPopup extends PopupTemplate {
+  @property()
+  view: esri.MapView;
+
   @property()
   title = `{WSC_ID} - {ADDRESS}`;
 
@@ -64,10 +81,15 @@ export default class WaterMeterEditorPopup extends PopupTemplate {
 
       return new Content({
         graphic,
+        view: this.view,
       });
     },
   });
 
   @property()
   content = [this.customContent];
+
+  constructor(properties: WaterMeterEditorPopupProperties) {
+    super(properties);
+  }
 }
