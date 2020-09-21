@@ -355,13 +355,17 @@ declare namespace __cov {
   ///////////////////////////////////////////////////////////////////
   export interface WaterMeterEditorProperties extends esri.WidgetProperties {
     layerPortalItemId: string;
+    parcelLink: string;
+    meterLink: string;
     layers?: esri.FeatureLayer[];
   }
 
   export class WaterMeterEditor extends esri.Widget {
     constructor(properties: WaterMeterEditorProperties);
     layerPortalItemId: string;
-    basemapPortalItemId: string;
+    parcelLink: string;
+    meterLink: string;
+    layers: esri.FeatureLayer[];
   }
 }
 

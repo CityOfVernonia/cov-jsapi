@@ -71,3 +71,22 @@
 .esri-search {
   width: 300px;
 }
+
+// popup
+.cov-water-meter-editor-popup--row {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-start;
+
+  div {
+    margin: 0 0.5rem;
+    width: 100%;
+  }
+
+  div:first-child {
+    margin-left: 0;
+  }
+  div:last-child {
+    margin-right: 0;
+  }
+}

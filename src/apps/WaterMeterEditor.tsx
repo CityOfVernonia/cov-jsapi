@@ -54,6 +54,12 @@ export default class WaterMeterEditor extends Widget {
   layers: FeatureLayer[] = [];
 
   @property()
+  parcelLink: string;
+
+  @property()
+  meterLink: string;
+
+  @property()
   @renderable()
   layer: FeatureLayer;
 
@@ -231,6 +237,8 @@ export default class WaterMeterEditor extends Widget {
       labelsVisible: false,
       popupTemplate: new WaterMeterEditorPopup({
         view,
+        parcelLink: this.parcelLink,
+        meterLink: this.meterLink,
       }),
     }));
     view.map.add(layer);
