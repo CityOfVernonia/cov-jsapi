@@ -24,6 +24,8 @@ import esriId from 'esri/identity/IdentityManager';
 
 import Error from 'esri/core/Error';
 
+const LS_CRED = 'jsapiauthcred';
+
 @subclass('cov.viewModels.OAuthViewModel')
 export default class OAuthViewModel extends Accessor {
   /**
@@ -55,7 +57,7 @@ export default class OAuthViewModel extends Accessor {
   /**
    * esri.portal.PortalUser instance of signed in user.
    */
-  @property()
+  @property({ aliasOf: 'portal.user' })
   user: esri.PortalUser;
 
   /**
@@ -96,14 +98,30 @@ export default class OAuthViewModel extends Accessor {
         esriId
           .checkSignInStatus(this.portal.url)
           .then((credential: esri.Credential) => {
-            this.credential = credential;
-            this.user = this.portal.user;
-            this.signedIn = true;
-            resolve(true);
+            // complete successful sign in
+            this._completeSignIn(credential, resolve);
           })
           .catch((checkSignInError: esri.Error): void => {
             if (checkSignInError.message === 'User is not signed in.') {
-              resolve(false);
+              // check local storage
+              const localStorageAuth = localStorage.getItem(LS_CRED);
+              if (localStorageAuth) {
+                // register token
+                esriId.registerToken(JSON.parse(localStorageAuth));
+                // check for sign in
+                esriId
+                  .checkSignInStatus(this.portal.url)
+                  .then((credential: esri.Credential) => {
+                    // complete successful sign in
+                    this._completeSignIn(credential, resolve);
+                  })
+                  .catch(() => {
+                    // neither signed into portal or with valid local storage
+                    resolve(false);
+                  });
+              } else {
+                resolve(false);
+              }
             } else {
               reject(checkSignInError);
             }
@@ -117,6 +135,32 @@ export default class OAuthViewModel extends Accessor {
           ),
         );
       }
+    });
+  }
+
+  /**
+   * Complete successful sign in.
+   * @param credential
+   * @param resolve
+   */
+  private _completeSignIn(
+    credential: esri.Credential,
+    resolve: (value?: boolean | PromiseLike<boolean> | undefined) => void,
+  ): void {
+    // set local storage
+    // @ts-ignore
+    localStorage.setItem(LS_CRED, JSON.stringify(credential.toJSON()));
+    // set class properties
+    this.credential = credential;
+    // this.user = this.portal.user;
+    this.signedIn = true;
+    // resolve signed in
+    resolve(true);
+    // reset local storage when token is changed
+    // seems legit...but unsure if it will cause any issues at this point
+    credential.on('token-change', (): void => {
+      // @ts-ignore
+      localStorage.setItem(LS_CRED, JSON.stringify(this.credential.toJSON()));
     });
   }
 
@@ -142,6 +186,7 @@ export default class OAuthViewModel extends Accessor {
    */
   signOut(): void {
     esriId.destroyCredentials();
+    localStorage.removeItem(LS_CRED);
     window.location.reload();
   }
 }
