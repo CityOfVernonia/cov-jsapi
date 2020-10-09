@@ -22,6 +22,8 @@ import { property, subclass } from 'esri/core/accessorSupport/decorators';
 
 import esriId from 'esri/identity/IdentityManager';
 
+import Portal from 'esri/portal/Portal';
+
 import Error from 'esri/core/Error';
 
 const LS_CRED = 'jsapiauthcred';
@@ -111,7 +113,10 @@ export default class OAuthViewModel extends Accessor {
                 // check for sign in
                 esriId
                   .checkSignInStatus(this.portal.url)
-                  .then((credential: esri.Credential) => {
+                  .then(async (credential: esri.Credential) => {
+                    // replace portal instance
+                    this.portal = new Portal();
+                    await this.portal.load();
                     // complete successful sign in
                     this._completeSignIn(credential, resolve);
                   })
