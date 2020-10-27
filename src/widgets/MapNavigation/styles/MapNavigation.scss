@@ -33,7 +33,7 @@ $bootswatch: variable-exists(primary);
   } @else {
     color: $interactive-font-color;
     background-color: $background-color;
-    border-bottom: 1px solid rgba($border-color, $opacity--disabled);
+    // border-bottom: 1px solid rgba($border-color, $opacity--disabled);
   }
 
   &:hover {

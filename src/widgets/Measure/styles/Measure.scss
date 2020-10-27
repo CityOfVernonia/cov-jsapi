@@ -1,0 +1,12 @@
+.cov-measure {
+  display: flex;
+  flex-flow: column;
+}
+.cov-measure--result {
+  p {
+    margin: 0 0 4px;
+  }
+  .esri-button {
+    margin-top: 8px;
+  }
+}

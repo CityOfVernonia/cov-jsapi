@@ -1,6 +1,6 @@
 {
   "name": "cov-jsapi",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "City of Vernonia for Esri's JavaScript API.",
   "scripts": {
     "build": "npx tsc && npx node-sass src/css/__test.scss > dist/test.css",
@@ -27,13 +27,11 @@
   },
   "homepage": "https://github.com/CityOfVernonia/cov-jsapi#readme",
   "devDependencies": {
-    "@arcgis/webpack-plugin": "^4.16.3",
-    "@types/arcgis-js-api": "4.16.0",
+    "@types/arcgis-js-api": "4.17.0",
     "@types/jest": "^26.0.13",
     "@types/js-cookie": "^2.2.6",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
-    "arcgis-js-api": "4.16.2",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^4.3.0",
     "eslint": "^7.8.1",
@@ -55,8 +53,9 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "bootswatch": "^4.5.2",
-    "js-cookie": "^2.2.1"
+    "@arcgis/webpack-plugin": "~4.17.4",
+    "bootswatch": "~4.5.2",
+    "js-cookie": "~2.2.1"
   },
   "arcgis": {
     "type": "jsapi"
