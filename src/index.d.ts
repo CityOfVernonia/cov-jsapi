@@ -138,7 +138,7 @@ declare namespace __cov {
   }
 
   export class Disclaimer extends esri.Widget {
-    constructor(properties: DisclaimerProperties);
+    constructor(properties?: DisclaimerProperties);
     title: string;
     disclaimer: string;
     static isAccepted(): boolean;
