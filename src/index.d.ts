@@ -397,30 +397,6 @@ declare namespace __cov {
     meterLink: string;
     layers: esri.FeatureLayer[];
   }
-
-  export interface VernoniaMapProperties extends esri.WidgetProperties {
-    view: esri.MapView;
-    oAuthViewModel: OAuthViewModel;
-    searchViewModel?: esri.SearchViewModel;
-    nextBasemap?: esri.Basemap;
-    widgets?: WidgetSwitcherWidgetProperties[];
-  }
-
-  export class VernoniaMap extends esri.Widget {
-    constructor(properties: VernoniaMapProperties);
-    view: esri.MapView;
-    oAuthViewModel: OAuthViewModel;
-    searchViewModel: esri.SearchViewModel;
-    nextBasemap: esri.Basemap;
-  }
-
-  export class VernoniaMapViewModel extends esri.Accessor {
-    // constructor(properties: VernoniaMapViewModelProperties);
-    view: esri.MapView;
-    oAuthViewModel: OAuthViewModel;
-    searchViewModel: esri.SearchViewModel;
-    nextBasemap: esri.Basemap;
-  }
 }
 
 declare module 'cov/popups/TaxLotPopup' {
@@ -491,14 +467,4 @@ declare module 'cov/widgets/WidgetSwitcher' {
 declare module 'cov/apps/WaterMeterEditor' {
   import WaterMeterEditor = __cov.WaterMeterEditor;
   export = WaterMeterEditor;
-}
-
-declare module 'cov/apps/VernoniaMap' {
-  import VernoniaMap = __cov.VernoniaMap;
-  export = VernoniaMap;
-}
-
-declare module 'cov/apps/VernoniaMap/VernoniaMapViewModel' {
-  import VernoniaMapViewModel = __cov.VernoniaMapViewModel;
-  export = VernoniaMapViewModel;
 }
