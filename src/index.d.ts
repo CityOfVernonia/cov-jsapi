@@ -380,6 +380,24 @@ declare namespace __cov {
     widgets: WidgetSwitcherWidgetProperties[];
   }
 
+  export interface MeasureProperties extends esri.WidgetProperties {
+    /**
+     * Map view.
+     */
+    view?: esri.MapView;
+
+    /**
+     * An elevation layer instance or elevation service URL.
+     */
+    elevationLayer: ElevationLayer | string;
+  }
+
+  export class Measure extends esri.Widget {
+    constructor(properties: MeasureProperties);
+    view: esri.MapView;
+    elevationLayer: ElevationLayer | string;
+  }
+
   ///////////////////////////////////////////////////////////////////
   // apps
   ///////////////////////////////////////////////////////////////////
@@ -462,6 +480,11 @@ declare module 'cov/widgets/MapNavigation' {
 declare module 'cov/widgets/WidgetSwitcher' {
   import WidgetSwitcher = __cov.WidgetSwitcher;
   export = WidgetSwitcher;
+}
+
+declare module 'cov/widgets/Measure' {
+  import Measure = __cov.Measure;
+  export = Measure;
 }
 
 declare module 'cov/apps/WaterMeterEditor' {
