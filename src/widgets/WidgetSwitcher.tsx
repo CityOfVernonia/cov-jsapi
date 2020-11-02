@@ -6,6 +6,11 @@ import { tsx } from 'esri/widgets/support/widget';
 
 import Widget from 'esri/widgets/Widget';
 
+interface SwitcherWidget extends esri.Widget {
+  onHide?: () => void;
+  onShow?: () => void;
+}
+
 const CSS = {
   base: 'cov-widget-switcher',
   container: 'cov-widget-switcher--container',
@@ -37,13 +42,13 @@ export default class WidgetSwitcher extends Widget {
   private _container: HTMLDivElement;
 
   @property()
-  private _activeWidget: esri.Widget | null = null;
+  private _activeWidget: SwitcherWidget | null = null;
 
   constructor(properties?: cov.WidgetSwitcherProperties) {
     super(properties);
   }
 
-  postInitialize() {
+  postInitialize(): void {
     this.widgets.forEach(this._add.bind(this));
   }
 
@@ -101,7 +106,7 @@ export default class WidgetSwitcher extends Widget {
     this._buttons.push(button);
   }
 
-  private _switchWidget(widget: esri.Widget, button: any): void {
+  private _switchWidget(widget: SwitcherWidget, button: any): void {
     // work around for buttons not get rerendered ???
     this._buttons.forEach((_button: any) => {
       (_button.domNode as HTMLDivElement).classList.remove(CSS.activeButton);
@@ -111,17 +116,33 @@ export default class WidgetSwitcher extends Widget {
       // no widget showing
       this._container.append(widget.container);
       this._activeWidget = widget;
+      // check for and call onShow()
+      if (this._activeWidget.onShow && typeof this._activeWidget.onShow === 'function') {
+        this._activeWidget.onShow();
+      }
       // work around for buttons not get rerendered ???
       (button.domNode as HTMLDivElement).classList.add(CSS.activeButton);
     } else if (this._activeWidget && this._activeWidget.id === widget.id) {
+      // check for and call onHide()
+      if (this._activeWidget.onHide && typeof this._activeWidget.onHide === 'function') {
+        this._activeWidget.onHide();
+      }
       // hide active widget
       this._container.removeChild(widget.container as HTMLDivElement);
       this._activeWidget = null;
     } else {
+      // check for and call onHide()
+      if (this._activeWidget.onHide && typeof this._activeWidget.onHide === 'function') {
+        this._activeWidget.onHide();
+      }
       // switch active widget
       this._container.removeChild(this._activeWidget.container as HTMLDivElement);
       this._container.append(widget.container);
       this._activeWidget = widget;
+      // check for and call onShow()
+      if (this._activeWidget.onShow && typeof this._activeWidget.onShow === 'function') {
+        this._activeWidget.onShow();
+      }
       // work around for buttons not get rerendered ???
       (button.domNode as HTMLDivElement).classList.add(CSS.activeButton);
     }
