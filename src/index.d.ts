@@ -364,7 +364,7 @@ declare namespace __cov {
     viewSwitcher: boolean;
     go2D: () => void;
     go3D: () => void;
-    on(type: 'view-switch', listener: () => '2d' | '3d'): IHandle;
+    on(type: 'view-switch', listener: (viewSwitch: '2d' | '3d') => void): IHandle;
     protected zoomViewModel: esri.ZoomViewModel;
     protected homeViewModel: esri.HomeViewModel;
     protected locateViewModel: esri.LocateViewModel;
