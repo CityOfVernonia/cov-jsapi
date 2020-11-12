@@ -1,0 +1,36 @@
+.cov-basemap-imagery-selector {
+  padding: 1rem;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.25rem;
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.cov-basemap-imagery-selector--heading {
+  font-weight: 600;
+  padding-bottom: 0.25rem;
+}
+
+.cov-basemap-imagery-selector--radio {
+  margin-right: 0.25rem;
+  cursor: pointer;
+  color: $button-color;
+  &:hover {
+    color: $button-color--hover;
+  }
+}
+
+// .cov-basemap-imagery-selector--title {
+  
+// }

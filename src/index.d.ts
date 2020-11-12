@@ -419,6 +419,36 @@ declare namespace __cov {
     elevationLayer: ElevationLayer | string;
   }
 
+  export interface BasemapImagerySelectorBasemap extends Object {
+    layer: esri.ImageryLayer | esri.ImageryTileLayer | esri.TileLayer;
+    title: string;
+  }
+
+  export interface BasemapImagerySelectorProperties extends esri.WidgetProperties {
+    /**
+     * The basemap to switch imagery layer.
+     */
+    basemap: esri.Basemap;
+
+    /**
+     * The index of the imagery layer to swap out.
+     * @default 0 (assumes imagery is first layer)
+     */
+    imageryLayerIndex?: number;
+
+    /**
+     * Imagery layers to choose from.
+     */
+    basemaps?: BasemapImagerySelectorBasemap[] | esri.Collection<BasemapImagerySelectorBasemap>;
+  }
+
+  export class BasemapImagerySelector extends esri.Widget {
+    constructor(properties: BasemapImagerySelectorProperties);
+    basemap: esri.Basemap;
+    imageryLayerIndex: number;
+    basemaps: esri.Collection<BasemapImagerySelectorBasemap>;
+  }
+
   ///////////////////////////////////////////////////////////////////
   // apps
   ///////////////////////////////////////////////////////////////////
