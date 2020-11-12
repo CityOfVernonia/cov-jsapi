@@ -38,7 +38,7 @@ export default class MapNavigation extends Widget {
    * Map view.
    */
   @property()
-  view: esri.MapView;
+  view: esri.MapView | esri.SceneView;
 
   /**
    * Include compass.
@@ -78,6 +78,23 @@ export default class MapNavigation extends Widget {
    */
   @property()
   fullscreenElement: string | HTMLElement;
+
+  /**
+   * Include button to switch between 2D/3D.
+   *
+   * @default false
+   */
+  viewSwitcher = false;
+
+  /**
+   * Function to go 2D.
+   */
+  go2D: () => void;
+
+  /**
+   * Function to go 23D.
+   */
+  go3D: () => void;
 
   @property()
   protected zoomViewModel = new ZoomViewModel();
@@ -147,14 +164,16 @@ export default class MapNavigation extends Widget {
         </div>
 
         {/* compass */}
-        {this.compass && this.view.type === '2d' && this.view.constraints.rotationEnabled ? (
+        {this.compass &&
+        this.view.type === '2d' &&
+        (this.view.constraints as esri.MapViewConstraints).rotationEnabled ? (
           <div
             class={CSS.button}
             role="button"
             title="Reset Orientation"
             bind={this}
             onclick={() => {
-              this.view.rotation = 0;
+              (this.view as esri.MapView).rotation = 0;
             }}
           >
             <span class={CSS.compass}>
@@ -209,6 +228,39 @@ export default class MapNavigation extends Widget {
             <span class={CSS.fallback}>
               {this._fullscreenState === 'ready' ? 'Enter Fullscreen' : 'Exit Fullscreen'}
             </span>
+          </div>
+        ) : null}
+
+        {/* view switcher */}
+        {this.viewSwitcher ? (
+          <div
+            class={CSS.button}
+            role="button"
+            title={this.view.type === '2d' ? 'Go 3D' : 'Go 2D'}
+            bind={this}
+            onclick={() => {
+              this.emit('view-switch', this.view.type === '2d' ? '3d' : '2d');
+              switch (this.view.type) {
+                case '2d':
+                  if (this.go2D && typeof this.go2D === 'function') {
+                    this.go2D();
+                  }
+                  break;
+                case '3d':
+                  if (this.go3D && typeof this.go3D === 'function') {
+                    this.go3D();
+                  }
+                  break;
+                default:
+                  break;
+              }
+            }}
+          >
+            <span
+              class={this.classes(CSS.icon, this.view.type === '2d' ? 'esri-icon-globe' : 'esri-icon-maps')}
+              aria-hidden="true"
+            ></span>
+            <span class={CSS.fallback}>{this.view.type === '2d' ? 'Go 3D' : 'Go 2D'}</span>
           </div>
         ) : null}
       </div>

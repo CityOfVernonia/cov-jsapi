@@ -299,7 +299,7 @@ declare namespace __cov {
     /**
      * Map view.
      */
-    view?: esri.MapView;
+    view?: esri.MapView | esri.SceneView;
 
     /**
      * Include compass.
@@ -334,16 +334,37 @@ declare namespace __cov {
      * An element or a querySelector string.
      */
     fullscreenElement?: string | HTMLElement;
+
+    /**
+     * Include button to switch between 2D/3D.
+     *
+     * @default false
+     */
+    viewSwitcher?: boolean;
+
+    /**
+     * Function to go 2D.
+     */
+    go2D?: () => void;
+
+    /**
+     * Function to go 23D.
+     */
+    go3D?: () => void;
   }
 
   export class MapNavigation extends esri.Widget {
     constructor(properties: MapNavigationProperties);
-    view: esri.MapView;
+    view: esri.MapView | esri.SceneView;
     compass: boolean;
     home: boolean;
     locate: boolean;
     fullscreen: boolean;
     fullscreenElement: string | HTMLElement;
+    viewSwitcher: boolean;
+    go2D: () => void;
+    go3D: () => void;
+    on(type: 'view-switch', listener: () => '2d' | '3d'): IHandle;
     protected zoomViewModel: esri.ZoomViewModel;
     protected homeViewModel: esri.HomeViewModel;
     protected locateViewModel: esri.LocateViewModel;
