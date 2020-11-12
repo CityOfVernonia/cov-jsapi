@@ -242,13 +242,13 @@ export default class MapNavigation extends Widget {
               this.emit('view-switch', this.view.type === '2d' ? '3d' : '2d');
               switch (this.view.type) {
                 case '2d':
-                  if (this.go2D && typeof this.go2D === 'function') {
-                    this.go2D();
+                  if (this.go3D && typeof this.go3D === 'function') {
+                    this.go3D();
                   }
                   break;
                 case '3d':
-                  if (this.go3D && typeof this.go3D === 'function') {
-                    this.go3D();
+                  if (this.go2D && typeof this.go2D === 'function') {
+                    this.go2D();
                   }
                   break;
                 default:
