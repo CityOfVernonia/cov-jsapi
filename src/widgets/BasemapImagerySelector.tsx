@@ -12,6 +12,8 @@ import Widget from 'esri/widgets/Widget';
 
 import Collection from 'esri/core/Collection';
 
+import { whenOnce } from 'esri/core/watchUtils';
+
 const CSS = {
   base: 'cov-basemap-imagery-selector esri-widget',
   heading: 'cov-basemap-imagery-selector--heading',
@@ -28,17 +30,35 @@ export default class BasemapImagerySelector extends Widget {
   imageryLayerIndex = 0;
 
   @property()
+  defaultImageryTitle = 'Imagery';
+
+  @property()
   @renderable()
-  basemaps: Collection<cov.BasemapImagerySelectorBasemap> | cov.BasemapImagerySelectorBasemap[] = new Collection();
+  basemaps: Collection<cov.BasemapImagerySelectorBasemap> | cov.BasemapImagerySelectorBasemap[];
 
   constructor(properties: cov.BasemapImagerySelectorProperties) {
     super(properties);
   }
 
   postInitialize(): void {
+    // cast array of basemaps as collection
     if (this.basemaps && Collection.isCollection(this.basemaps) === false) {
       this.basemaps = new Collection(this.basemaps);
     }
+    // add default layer to collection
+    whenOnce(this, 'basemap.loaded', () => {
+      (this.basemaps as Collection<cov.BasemapImagerySelectorBasemap>).add(
+        {
+          layer: this.basemap.baseLayers.getItemAt(this.imageryLayerIndex) as
+            | esri.ImageryLayer
+            | esri.ImageryTileLayer
+            | esri.TileLayer
+            | esri.BingMapsLayer,
+          title: this.defaultImageryTitle,
+        },
+        0,
+      );
+    });
   }
 
   render(): tsx.JSX.Element {
@@ -54,7 +74,8 @@ export default class BasemapImagerySelector extends Widget {
     return (this.basemaps as Collection<cov.BasemapImagerySelectorBasemap>)
       .toArray()
       .map((basemap: cov.BasemapImagerySelectorBasemap) => {
-        const isCurrentLayer = basemap.layer === this.basemap.baseLayers.getItemAt(0);
+        const imageryLayerIndex = this.imageryLayerIndex;
+        const isCurrentLayer = basemap.layer === this.basemap.baseLayers.getItemAt(imageryLayerIndex);
         return (
           <li
             bind={this}
@@ -62,8 +83,9 @@ export default class BasemapImagerySelector extends Widget {
               if (isCurrentLayer) {
                 return;
               }
-              this.basemap.baseLayers.removeAt(0);
-              this.basemap.baseLayers.add(basemap.layer, 0);
+              // this may not work if imagery layer isn't at index 0 but when would that ever be the case?
+              this.basemap.baseLayers.removeAt(imageryLayerIndex);
+              this.basemap.baseLayers.add(basemap.layer, imageryLayerIndex);
             }}
           >
             <span

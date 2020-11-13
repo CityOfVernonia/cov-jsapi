@@ -420,7 +420,7 @@ declare namespace __cov {
   }
 
   export interface BasemapImagerySelectorBasemap extends Object {
-    layer: esri.ImageryLayer | esri.ImageryTileLayer | esri.TileLayer;
+    layer: esri.ImageryLayer | esri.ImageryTileLayer | esri.TileLayer | esri.BingMapsLayer;
     title: string;
   }
 
@@ -437,7 +437,14 @@ declare namespace __cov {
     imageryLayerIndex?: number;
 
     /**
+     * Title for the imagery layer loaded in the basemap by default.
+     * @default Imagery
+     */
+    defaultImageryTitle?: string;
+
+    /**
      * Imagery layers to choose from.
+     * The default imagery layer will be added to collection by the widget.
      */
     basemaps?: BasemapImagerySelectorBasemap[] | esri.Collection<BasemapImagerySelectorBasemap>;
   }
@@ -446,6 +453,7 @@ declare namespace __cov {
     constructor(properties: BasemapImagerySelectorProperties);
     basemap: esri.Basemap;
     imageryLayerIndex: number;
+    defaultImageryTitle: string;
     basemaps: esri.Collection<BasemapImagerySelectorBasemap>;
   }
 
