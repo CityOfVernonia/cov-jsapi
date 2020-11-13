@@ -538,6 +538,11 @@ declare module 'cov/widgets/Measure' {
   export = Measure;
 }
 
+declare module 'cov/widgets/BasemapImagerySelector' {
+  import BasemapImagerySelector = __cov.BasemapImagerySelector;
+  export = BasemapImagerySelector;
+}
+
 declare module 'cov/apps/WaterMeterEditor' {
   import WaterMeterEditor = __cov.WaterMeterEditor;
   export = WaterMeterEditor;
