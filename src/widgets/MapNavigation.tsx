@@ -145,7 +145,7 @@ export default class MapNavigation extends Widget {
           role="button"
           title="Zoom In"
           bind={this}
-          onclick={this.zoomViewModel.zoomIn}
+          onclick={() => this.zoomViewModel.zoomIn()}
         >
           <span class={this.classes(CSS.icon, 'esri-icon-plus')} aria-hidden="true"></span>
           <span class={CSS.fallback}>Zoom In</span>
@@ -157,7 +157,7 @@ export default class MapNavigation extends Widget {
           role="button"
           title="Zoom Out"
           bind={this}
-          onclick={this.zoomViewModel.zoomOut}
+          onclick={() => this.zoomViewModel.zoomOut()}
         >
           <span class={this.classes(CSS.icon, 'esri-icon-minus')} aria-hidden="true"></span>
           <span class={CSS.fallback}>Zoom Out</span>
