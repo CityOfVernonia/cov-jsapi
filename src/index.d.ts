@@ -101,7 +101,7 @@ declare namespace __cov {
   }
 
   export class UnitsViewModel extends esri.Accessor {
-    constructor(properties: UnitsViewModelProperties);
+    constructor(properties?: UnitsViewModelProperties);
     selectClass: string;
     locationUnit: string;
     locationUnits: Hash<string>;
