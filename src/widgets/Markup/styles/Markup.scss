@@ -1,0 +1,37 @@
+.cov-markup {
+  display: flex;
+  flex-flow: column;
+  min-width: 280px;
+  .esri-input {
+    width: 100%;
+  }
+  a {
+    color: $interactive-font-color;
+    &:hover {
+      color: $interactive-font-color--hover;
+    }
+  }
+}
+
+.cov-markup--button-group {
+  display: flex;
+  flex-flow: row;
+}
+
+.cov-markup--button-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.cov-markup--text-group {
+  display: flex;
+  flex-flow: row;
+  margin: 0.25rem 0;
+  .esri-widget--button {
+    border: 1px solid rgba($interactive-font-color, 0.3);
+    border-left: none;
+  }
+  // .esri-input {
+    // border-right: none;
+  // }
+}

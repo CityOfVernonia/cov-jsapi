@@ -87,14 +87,7 @@ module.exports = (_, args) => {
       }),
 
       // arcgis js
-      new ArcGISPlugin({
-        features: {
-          '3d': false,
-          has: {
-            'esri-native-promise': true,
-          },
-        },
-      }),
+      new ArcGISPlugin(),
 
       // index
       new HtmlWebpackPlugin({
