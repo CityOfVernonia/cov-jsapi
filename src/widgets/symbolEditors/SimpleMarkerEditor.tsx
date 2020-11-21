@@ -12,6 +12,11 @@ import ColorPicker from './support/ColorPicker';
 
 @subclass('cov.widgets.symbolEditors.SimpleMarkerEditor')
 export default class SimpleMarkerEditor extends SymbolEditor {
+  @property({
+    aliasOf: 'graphic.symbol'
+  })
+  symbol: esri.SimpleMarkerSymbol;
+
   @property()
   colorPicker = new ColorPicker();
 

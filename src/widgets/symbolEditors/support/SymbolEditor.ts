@@ -21,16 +21,21 @@ export default class SymbolEditor extends Widget {
   @property({
     aliasOf: 'graphic.symbol',
   })
-  symbol: any;
+  symbol: esri.Symbol2D3D;
 
+  /**
+   * Sets any symbol property.
+   * @param property the property to set in dot notation, e.g. 'color.a'
+   * @param evt onchange or oninput event
+   * @param value property value to set
+   */
   setSymbolProperty(property: string, evt?: Event, value?: string | number): void {
-    let target;
     const symbol = this.symbol.clone();
-    if (evt) {
-      target = evt.target as HTMLSelectElement | HTMLInputElement;
-      value = target.value;
-    }
-    symbol.set(property, value);
+    if (!evt && !value) return;
+    if (evt && !value) value = (evt.target as HTMLSelectElement | HTMLInputElement).value;
+    symbol.set({
+      [property]: value,
+    });
     this.graphic.symbol = symbol;
   }
 }
