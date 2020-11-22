@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@arcgis/webpack-plugin": "~4.17.4",
+    "@esri/calcite-ui-icons": "^3.13.0",
     "bootswatch": "~4.5.2",
     "js-cookie": "~2.2.1"
   },

@@ -11,6 +11,7 @@ export const CSS = {
   select: 'esri-select',
   slider: 'cov-slider',
   sliderLabels: 'cov-slider--labels',
+  input: 'esri-input',
 };
 
 @subclass('cov.widgets.symbolEditors.support.SymbolEditor')
@@ -23,19 +24,27 @@ export default class SymbolEditor extends Widget {
   })
   symbol: esri.Symbol2D3D;
 
+  // @property({
+  //   aliasOf: 'graphic.layer',
+  // })
+  // layer: esri.GraphicsLayer;
+
   /**
    * Sets any symbol property.
    * @param property the property to set in dot notation, e.g. 'color.a'
    * @param evt onchange or oninput event
    * @param value property value to set
    */
-  setSymbolProperty(property: string, evt?: Event, value?: string | number): void {
-    const symbol = this.symbol.clone();
+  setSymbolProperty(property: string, evt?: Event, value?: string | number | esri.Color): void {
+    const { graphic, symbol: orginalSymbol } = this;
+    const symbol = orginalSymbol.clone();
     if (!evt && !value) return;
     if (evt && !value) value = (evt.target as HTMLSelectElement | HTMLInputElement).value;
     symbol.set({
       [property]: value,
     });
-    this.graphic.symbol = symbol;
+    graphic.set({
+      symbol: symbol,
+    });
   }
 }

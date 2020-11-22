@@ -1,7 +1,23 @@
 import esri = __esri;
 
+export interface MarkupProperties extends esri.WidgetProperties {
+  /**
+   * Map or scene view.
+   */
+  view?: esri.MapView | esri.SceneView;
+  /**
+   * Default text symbol.
+   */
+  textSymbol?: TextSymbol;
+  /**
+   * Sketch view model.
+   * Provide to set any non-SVM properties, most notably default symbols.
+   */
+  sketchViewModel?: SketchViewModel;
+}
+
 // core modules
-import { whenOnce } from 'esri/core/watchUtils';
+import { whenOnce, watch } from 'esri/core/watchUtils';
 import { property, subclass } from 'esri/core/accessorSupport/decorators';
 import { renderable, tsx } from 'esri/widgets/support/widget';
 import Widget from 'esri/widgets/Widget';
@@ -12,7 +28,6 @@ import SketchViewModel from 'esri/widgets/Sketch/SketchViewModel';
 
 // layers and graphic
 import GraphicsLayer from 'esri/layers/GraphicsLayer';
-import FeatureLayer from 'esri/layers/FeatureLayer';
 import GroupLayer from 'esri/layers/GroupLayer';
 import Graphic from 'esri/Graphic';
 
@@ -21,125 +36,91 @@ import PopupTemplate from 'esri/PopupTemplate';
 import Collection from 'esri/core/Collection';
 import ActionButton from 'esri/support/actions/ActionButton';
 import CustomContent from 'esri/popup/content/CustomContent';
+import TextEditor from './symbolEditors/TextEditor';
 import SimpleMarkerEditor from './symbolEditors/SimpleMarkerEditor';
 import SimpleLineEditor from './symbolEditors/SimpleLineEditor';
 import SimpleFillEditor from './symbolEditors/SimpleFillEditor';
+import { TextSymbol } from 'esri/symbols';
 
-export interface MarkupProperties extends esri.WidgetProperties {
-  view?: esri.MapView | esri.SceneView;
-}
+import { textLarge16 } from '@esri/calcite-ui-icons/js/textLarge16.js';
 
+// widget styles
 const CSS = {
   base: 'esri-widget cov-markup',
-
   tabs: 'cov-tabs',
   tabsContentWrapper: 'cov-tabs--content-wrapper',
   tabsContent: 'cov-tabs--content',
-  // tabsContentNoPadding: 'cov-tabs--content_no-padding',
-
   buttonGroup: 'cov-markup--button-group',
   buttonDisabled: 'cov-markup--button-disabled',
-
   textGroup: 'cov-markup--text-group',
-
   icons: {
     point: 'esri-icon-map-pin',
     polyline: 'esri-icon-polyline',
     polygon: 'esri-icon-polygon',
     rectangle: 'esri-icon-checkbox-unchecked',
     circle: 'esri-icon-radio-unchecked',
+    plus: 'esri-icon-plus',
+    edit: 'esri-icon-edit',
+    trash: 'esri-icon-trash',
+    up: 'esri-icon-up',
+    down: 'esri-icon-down',
   },
-
   icon: 'esri-icon',
+  svg: 'cov-markup--svg',
   fallbackText: 'esri-icon-font-fallback-text',
   button: 'esri-button',
   widgetButton: 'esri-widget--button',
   input: 'esri-input',
-  select: 'esri-select',
 };
 
 @subclass('cov.widgets.Markup')
 export default class Markup extends Widget {
+  /**
+   * Constructor properties.
+   */
   @property()
   view: esri.MapView | esri.SceneView;
 
-  // symbols
   @property()
-  symbols = {
-    map: {
-      point: {
-        type: 'simple-marker',
-        style: 'circle',
-        size: 10,
-        color: '#FFFF00',
-        outline: {
-          color: '#FF0000',
-          width: 1,
-        },
-      },
-      polyline: {
-        type: 'simple-line',
-        style: 'solid',
-        color: '#FF0000',
-        width: 2,
-      },
-      polygon: {
-        type: 'simple-fill',
-        color: [255, 255, 0, 0.25],
-        style: 'solid',
-        outline: {
-          color: '#FF0000',
-          width: 2,
-        },
-      },
+  textSymbol = new TextSymbol({
+    text: 'New Text',
+    haloSize: 1,
+    haloColor: 'white',
+    font: {
+      size: 10,
     },
-    scene: {},
-  };
-
-  // map or scene view
-  @property()
-  private _viewType: 'map' | 'scene';
-
-  // @property({
-  //   type: MarkupViewModel,
-  // })
-  // @renderable()
-  // viewModel: MarkupViewModel = new MarkupViewModel();
+  });
 
   @property({
     type: SketchViewModel,
   })
   readonly sketchViewModel: SketchViewModel = new SketchViewModel({
     layer: new GraphicsLayer({
-      id: 'cov_markup_sketch_layer',
       listMode: 'hide',
     }),
   });
 
+  /**
+   * Layers.
+   */
   @property({
-    type: FeatureLayer,
+    type: GroupLayer,
   })
-  readonly text = new FeatureLayer({
-    source: [],
-    objectIdField: 'objectid',
-    geometryType: 'point',
-    fields: [
-      {
-        name: 'objectid',
-        type: 'oid',
-      },
-      {
-        name: 'text',
-        type: 'string',
-      },
-    ],
+  readonly layers = new GroupLayer({
+    listMode: 'hide',
+  });
+
+  @property({
+    type: GraphicsLayer,
+  })
+  readonly text = new GraphicsLayer({
+    listMode: 'hide',
   });
 
   @property({
     type: GraphicsLayer,
   })
   readonly point = new GraphicsLayer({
-    id: 'cov_markup_point_layer',
     listMode: 'hide',
   });
 
@@ -147,7 +128,6 @@ export default class Markup extends Widget {
     type: GraphicsLayer,
   })
   readonly polyline = new GraphicsLayer({
-    id: 'cov_markup_polyline_layer',
     listMode: 'hide',
   });
 
@@ -155,29 +135,37 @@ export default class Markup extends Widget {
     type: GraphicsLayer,
   })
   readonly polygon = new GraphicsLayer({
-    id: 'cov_markup_polygon_layer',
     listMode: 'hide',
   });
 
   @property({
+    type: GraphicsLayer,
     aliasOf: 'sketchViewModel.layer',
   })
   readonly sketch: GraphicsLayer;
 
+  /**
+   * Private widget properties.
+   */
+  // view/popup selected feature
   @property({
     aliasOf: 'view.popup.selectedFeature',
   })
   @renderable()
   private _selectedFeature: Graphic | null;
 
-  // widget render properties
+  // flag create point as text
+  @property()
+  private _text = false;
+
+  // active tab
   @property()
   @renderable()
-  private _activeTab = 'data-tab-0';
+  private _activeTab = 0;
 
   constructor(properties?: MarkupProperties) {
     super(properties);
-    // console.log('widget', this);
+    console.log(textLarge16);
   }
 
   postInitialize(): void {
@@ -195,37 +183,68 @@ export default class Markup extends Widget {
     } else if (!graphic || this._isMarkup(graphic)) {
       return;
     }
-    this._add({
-      state: 'complete',
-      tool: graphic.geometry.type,
-      graphic: new Graphic({
-        geometry: graphic.geometry.clone(),
-      }),
-    });
+    this._add(graphic);
   }
 
   private _initialize(): void {
-    const { view, sketchViewModel, point, polyline, polygon, sketch } = this;
-    const { map, type } = view;
+    const { view, sketchViewModel, layers, point, polyline, polygon, text } = this;
+    let { sketch } = this;
+    const { map } = view;
 
-    // set view type
-    this._viewType = type === '3d' ? 'scene' : 'map';
+    // ensure sketch if SVM provided to constructor
+    if (!sketch) {
+      sketch = new GraphicsLayer({
+        listMode: 'hide',
+      });
+    }
 
     // widget layers
-    const layers = new GroupLayer({
-      listMode: 'hide',
-      layers: [polygon, polyline, point, sketch],
-    });
+    layers.addMany([polygon, polyline, point, text, sketch]);
     // add layers to map
     map.add(layers);
-    // TODO: watch `layers` and stick group layer as top layer
+    // watch `layers` and stick group layer as top layer
+    watch(map, 'layers.length', () => {
+      if (map.layers.indexOf(layers) !== 0) map.layers.reorder(layers, 0);
+    });
 
     // sketch view model
     sketchViewModel.view = view;
     // wire up create event
-    sketchViewModel.on('create', this._add.bind(this));
+    sketchViewModel.on('create', (createEvent: esri.SketchViewModelCreateEvent) => {
+      const { state, graphic } = createEvent;
+      // clear text flag
+      if (state === 'cancel') this._text = false;
+      if (state !== 'complete') return;
+      this._add(graphic);
+      // clear text flag
+      this._text = false;
+    });
     // wire up update event
     sketchViewModel.on('update', this._update.bind(this));
+
+    // wire up popup actions
+    view.popup.on('trigger-action', (triggerEvent: esri.PopupTriggerActionEvent) => {
+      switch (triggerEvent.action.id) {
+        // delete graphic
+        case 'cov-markup-edit-delete':
+          this._delete();
+          break;
+        // edit geometry
+        case 'cov-markup-edit-geometry':
+          this._editGeometry();
+          break;
+        // move up on layer
+        case 'cov-markup-edit-move-up':
+          this._up();
+          break;
+        // move down on layer
+        case 'cov-markup-edit-move-down':
+          this._down();
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   /**
@@ -234,54 +253,55 @@ export default class Markup extends Widget {
    */
   private _isMarkup(graphic: Graphic): boolean {
     const { layer } = graphic;
-    const { point, polyline, polygon } = this;
-    return layer === point || layer === polyline || layer === polygon ? true : false;
+    const { text, point, polyline, polygon } = this;
+    return layer === text || layer === point || layer === polyline || layer === polygon ? true : false;
   }
 
   /**
    * Cause SVM to create.
    * @param tool
+   * @param text
    */
-  private _create(tool: 'point' | 'polyline' | 'polygon' | 'rectangle' | 'circle'): void {
+  private _create(tool: 'point' | 'polyline' | 'polygon' | 'rectangle' | 'circle', text?: boolean): void {
     const { view, sketchViewModel } = this;
     view.popup.close();
     sketchViewModel.create(tool);
+    this._text = text ? true : false;
   }
 
   /**
    * Add new sketched graphic to appropriate layer after setting popup and the appropriate symbol.
    * @param createEvent
    */
-  private _add(createEvent: { state: string; tool: string; graphic: Graphic }): void {
-    const { _viewType, point, polyline, polygon, symbols } = this;
-    const { state, tool, graphic } = createEvent;
-    if (state !== 'complete') return;
+  private _add(graphic: Graphic): void {
+    const { textSymbol, sketchViewModel, _text, text, point, polyline, polygon } = this;
     const type = graphic.geometry.type;
-    // bad graphic
+
+    // bad graphic returned by creator()
     // graphic.popupTemplate = new MarkupPopup();
     // popup template
     graphic.popupTemplate = new PopupTemplate({
-      title: `Markup ${type}`,
+      title: `Markup ${_text ? 'text' : type}`,
       actions: new Collection<ActionButton>([
         new ActionButton({
           title: 'Edit Geometry',
           id: 'cov-markup-edit-geometry',
-          className: 'esri-icon-edit',
+          className: CSS.icons.edit,
         }),
         new ActionButton({
           title: 'Delete',
           id: 'cov-markup-edit-delete',
-          className: 'esri-icon-trash',
+          className: CSS.icons.trash,
         }),
         new ActionButton({
           title: 'Move Up',
           id: 'cov-markup-edit-move-up',
-          className: 'esri-icon-up',
+          className: CSS.icons.up,
         }),
         new ActionButton({
           title: 'Move Down',
           id: 'cov-markup-edit-move-down',
-          className: 'esri-icon-down',
+          className: CSS.icons.down,
         }),
       ]),
       content: [
@@ -289,9 +309,13 @@ export default class Markup extends Widget {
           creator: (): Widget => {
             switch (type) {
               case 'point':
-                return new SimpleMarkerEditor({
-                  graphic,
-                });
+                return _text
+                  ? new TextEditor({
+                      graphic,
+                    })
+                  : new SimpleMarkerEditor({
+                      graphic,
+                    });
               case 'polyline':
                 return new SimpleLineEditor({
                   graphic,
@@ -307,10 +331,20 @@ export default class Markup extends Widget {
         }),
       ],
     });
+
+    // handle text
+    if (_text) {
+      graphic.symbol = textSymbol.clone();
+      (graphic.symbol as TextSymbol).text =
+        (document.querySelector('input[data-cov-markup-text-input]') as HTMLInputElement).value || 'New Text';
+      text.add(graphic);
+      return;
+    }
+
     // symbol
-    graphic.symbol = symbols[_viewType][type];
+    graphic.symbol = sketchViewModel[`${type}Symbol`];
     // add to layer
-    switch (tool) {
+    switch (type) {
       case 'point':
         point.add(graphic);
         break;
@@ -318,8 +352,6 @@ export default class Markup extends Widget {
         polyline.add(graphic);
         break;
       case 'polygon':
-      case 'rectangle':
-      case 'circle':
         polygon.add(graphic);
         break;
       default:
@@ -343,12 +375,12 @@ export default class Markup extends Widget {
    * Add updated graphic to appropriate layer.
    * @param updateEvent
    */
-  private _update(updateEvent: any): void {
+  private _update(updateEvent: esri.SketchViewModelUpdateEvent): void {
     const { point, polyline, polygon } = this;
     const { state, graphics } = updateEvent;
     // methinks there's a way to deconstruct this...
     const graphic = graphics[0];
-    if (state !== 'complete' && state !== 'cancel') return;
+    if (state !== 'complete') return;
     switch (graphic.geometry.type) {
       case 'point':
         point.add(graphic);
@@ -400,7 +432,7 @@ export default class Markup extends Widget {
     }
   }
 
-  render() {
+  render(): tsx.JSX.Element {
     const { id, view, _selectedFeature } = this;
 
     const addButtonClasses = this.classes(
@@ -419,22 +451,21 @@ export default class Markup extends Widget {
         <ul class={CSS.tabs} role="tablist">
           <li
             id={`tab_${id}_tab_0`}
-            aria-selected={this._activeTab === 'data-tab-0' ? 'true' : 'false'}
+            aria-selected={this._activeTab === 0 ? 'true' : 'false'}
             bind={this}
-            onclick={() => (this._activeTab = 'data-tab-0')}
+            onclick={() => (this._activeTab = 0)}
           >
             Markup
           </li>
           <li
             id={`tab_${id}_tab_1`}
-            aria-selected={this._activeTab === 'data-tab-1' ? 'true' : 'false'}
+            aria-selected={this._activeTab === 1 ? 'true' : 'false'}
             bind={this}
-            onclick={() => (this._activeTab = 'data-tab-1')}
+            onclick={() => (this._activeTab = 1)}
           >
             Projects
           </li>
         </ul>
-
         {/* content */}
         <main class={CSS.tabsContentWrapper}>
           {/* create and edit */}
@@ -442,11 +473,12 @@ export default class Markup extends Widget {
             class={CSS.tabsContent}
             aria-labelledby={`tab_${id}_tab_0`}
             role="tabcontent"
-            style={`display:${this._activeTab === 'data-tab-0' ? 'block' : 'none'}`}
+            style={`display:${this._activeTab === 0 ? 'block' : 'none'}`}
           >
-            {/* sketch buttons */}
+            {/* create buttons */}
             <div>Create</div>
             <div class={CSS.buttonGroup}>
+              {/* sketch buttons */}
               {['point', 'polyline', 'polygon', 'rectangle', 'circle'].map(
                 (tool: 'point' | 'polyline' | 'polygon' | 'rectangle' | 'circle') => {
                   return (
@@ -463,23 +495,24 @@ export default class Markup extends Widget {
                   );
                 },
               )}
-            </div>
-
-            <div class={CSS.textGroup}>
-              <input class={CSS.input} type="text" placeholder="Add text" />
+              {/* add text button */}
               <div
                 class={CSS.widgetButton}
                 role="button"
                 bind={this}
-                // onclick={() => this.addGraphicToMarkup()}
+                onclick={() => this._create('point', true)}
                 title="Add text"
               >
-                <span class="esri-icon esri-icon-labels" aria-hidden="true"></span>
+                <svg class={this.classes(CSS.icon, CSS.svg)} height="16" width="16">
+                  <path d={textLarge16} />
+                </svg>
                 <span class={CSS.fallbackText}>Add text</span>
               </div>
             </div>
-
-            {/* end sketch buttons */}
+            {/* text input */}
+            <div class={CSS.textGroup}>
+              <input class={CSS.input} type="text" placeholder="Text to add (optional)" data-cov-markup-text-input="" />
+            </div>
             {/* edit buttons */}
             <div>Edit</div>
             <div class={CSS.buttonGroup}>
@@ -490,7 +523,7 @@ export default class Markup extends Widget {
                 onclick={() => this.addGraphicToMarkup()}
                 title="Add selected feature as markup"
               >
-                <span class="esri-icon esri-icon-plus" aria-hidden="true"></span>
+                <span class={this.classes(CSS.icon, CSS.icons.plus)} aria-hidden="true"></span>
                 <span class={CSS.fallbackText}>Add selected feature as markup</span>
               </div>
               <div
@@ -500,7 +533,7 @@ export default class Markup extends Widget {
                 onclick={() => this._editGeometry()}
                 title="Edit markup geometry"
               >
-                <span class="esri-icon esri-icon-edit" aria-hidden="true"></span>
+                <span class={this.classes(CSS.icon, CSS.icons.edit)} aria-hidden="true"></span>
                 <span class={CSS.fallbackText}>Edit markup geometry</span>
               </div>
               <div
@@ -510,7 +543,7 @@ export default class Markup extends Widget {
                 onclick={() => this._delete()}
                 title="Delete markup"
               >
-                <span class="esri-icon esri-icon-trash" aria-hidden="true"></span>
+                <span class={this.classes(CSS.icon, CSS.icons.trash)} aria-hidden="true"></span>
                 <span class={CSS.fallbackText}>Delete markup</span>
               </div>
               <div
@@ -520,7 +553,7 @@ export default class Markup extends Widget {
                 onclick={() => this._up()}
                 title="Move markup up"
               >
-                <span class="esri-icon esri-icon-up" aria-hidden="true"></span>
+                <span class={this.classes(CSS.icon, CSS.icons.up)} aria-hidden="true"></span>
                 <span class={CSS.fallbackText}>Move markup up</span>
               </div>
               <div
@@ -530,19 +563,18 @@ export default class Markup extends Widget {
                 onclick={() => this._down()}
                 title="Move markup down"
               >
-                <span class="esri-icon esri-icon-down" aria-hidden="true"></span>
+                <span class={this.classes(CSS.icon, CSS.icons.down)} aria-hidden="true"></span>
                 <span class={CSS.fallbackText}>Move markup down</span>
               </div>
             </div>
             {/* end edit buttons */}
           </section>
-
-          {/* snapshot */}
+          {/* project */}
           <section
             class={CSS.tabsContent}
             aria-labelledby={`tab_${id}_tab_1`}
             role="tabcontent"
-            style={`display:${this._activeTab === 'data-tab-1' ? 'block' : 'none'}`}
+            style={`display:${this._activeTab === 1 ? 'block' : 'none'}`}
           ></section>
         </main>
       </div>

@@ -11,6 +11,12 @@
       color: $interactive-font-color--hover;
     }
   }
+  .esri-widget--button {
+    fill: $interactive-font-color;
+    &:hover path {
+      fill: $interactive-font-color--hover;
+    }
+  }
 }
 
 .cov-markup--button-group {
@@ -26,12 +32,5 @@
 .cov-markup--text-group {
   display: flex;
   flex-flow: row;
-  margin: 0.25rem 0;
-  .esri-widget--button {
-    border: 1px solid rgba($interactive-font-color, 0.3);
-    border-left: none;
-  }
-  // .esri-input {
-    // border-right: none;
-  // }
+  margin: 0.5rem 0;
 }
