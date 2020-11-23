@@ -806,7 +806,7 @@ export default class Markup extends Widget {
             <div>Offset</div>
             <form class={CSS.form} bind={this} onsubmit={(evt: Event) => this._offset(evt)}>
               <fieldset
-                disabled={!(_selectedFeature && _selectedFeature.geometry.type === 'polyline' && view.popup.visible)}
+                disabled={!(_selectedFeature && _selectedFeature.geometry?.type === 'polyline' && view.popup.visible)}
               >
                 <div class={CSS.formRow}>
                   <div class={CSS.formControl}>
