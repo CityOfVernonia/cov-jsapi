@@ -1,22 +1,4 @@
-import esri = __esri;
-
-export interface MarkupProperties extends esri.WidgetProperties {
-  /**
-   * Map or scene view.
-   */
-  view?: esri.MapView | esri.SceneView;
-  /**
-   * Default text symbol.
-   */
-  textSymbol?: TextSymbol;
-  /**
-   * Sketch view model.
-   * Provide to set any non-SVM properties, most notably default symbols.
-   */
-  sketchViewModel?: SketchViewModel;
-
-  projectsWidget?: any;
-}
+import cov = __cov;
 
 // core modules
 import { whenOnce, watch } from 'esri/core/watchUtils';
@@ -168,7 +150,7 @@ export default class Markup extends Widget {
   @renderable()
   private _activeTab = 0;
 
-  constructor(properties?: MarkupProperties) {
+  constructor(properties?: cov.MarkupProperties) {
     super(properties);
   }
 

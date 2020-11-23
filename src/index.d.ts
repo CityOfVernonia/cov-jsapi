@@ -457,6 +457,42 @@ declare namespace __cov {
     basemaps: esri.Collection<BasemapImagerySelectorBasemap>;
   }
 
+  export interface MarkupProperties extends esri.WidgetProperties {
+    /**
+     * Map or scene view.
+     */
+    view?: esri.MapView | esri.SceneView;
+    /**
+     * Default text symbol.
+     */
+    textSymbol?: TextSymbol;
+    /**
+     * Sketch view model.
+     * Provide to set any non-SVM properties, most notably default symbols.
+     */
+    sketchViewModel?: SketchViewModel;
+
+    /**
+     * Widget to manage markup projects.
+     * Not ready for production!!!
+     */
+    projectsWidget?: any;
+  }
+
+  export class Markup extends esri.Widget {
+    constructor(properties?: MarkupProperties);
+    view: esri.MapView | esri.SceneView;
+    textSymbol: TextSymbol;
+    sketchViewModel: SketchViewModel;
+    projectsWidget: any;
+    readonly layers: esri.GroupLayer;
+    readonly text: esri.GraphicsLayer;
+    readonly point: esri.GraphicsLayer;
+    readonly polyline: esri.GraphicsLayer;
+    readonly polygon: esri.GraphicsLayer;
+    readonly sketch: esri.GraphicsLayer;
+  }
+
   ///////////////////////////////////////////////////////////////////
   // apps
   ///////////////////////////////////////////////////////////////////
@@ -544,6 +580,11 @@ declare module 'cov/widgets/WidgetSwitcher' {
 declare module 'cov/widgets/Measure' {
   import Measure = __cov.Measure;
   export = Measure;
+}
+
+declare module 'cov/widgets/Markup' {
+  import Markup = __cov.Markup;
+  export = Markup;
 }
 
 declare module 'cov/widgets/BasemapImagerySelector' {
