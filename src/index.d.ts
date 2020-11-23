@@ -462,15 +462,22 @@ declare namespace __cov {
      * Map or scene view.
      */
     view?: esri.MapView | esri.SceneView;
+
     /**
      * Default text symbol.
      */
     textSymbol?: TextSymbol;
+
     /**
      * Sketch view model.
      * Provide to set any non-SVM properties, most notably default symbols.
      */
     sketchViewModel?: SketchViewModel;
+
+    /**
+     * Wkid to project polylines for offsetting.
+     */
+    offsetProjectionWkid?: number;
 
     /**
      * Widget to manage markup projects.
@@ -484,6 +491,7 @@ declare namespace __cov {
     view: esri.MapView | esri.SceneView;
     textSymbol: TextSymbol;
     sketchViewModel: SketchViewModel;
+    offsetProjectionWkid: number;
     projectsWidget: any;
     addGraphicToMarkup(graphic?: esri.Graphic): () => void;
     onHide(): () => void;

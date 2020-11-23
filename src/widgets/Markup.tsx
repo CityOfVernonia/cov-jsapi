@@ -8,6 +8,7 @@ import Widget from 'esri/widgets/Widget';
 
 // view models
 // import MarkupViewModel from './Markup/MarkupViewModel';
+import UnitsViewModel from '../viewModels/UnitsViewModel';
 import SketchViewModel from 'esri/widgets/Sketch/SketchViewModel';
 
 // layers and graphic
@@ -26,6 +27,12 @@ import SimpleLineEditor from './symbolEditors/SimpleLineEditor';
 import SimpleFillEditor from './symbolEditors/SimpleFillEditor';
 import { TextSymbol } from 'esri/symbols';
 
+// tools
+import { load as projectionLoad, isLoaded as projectionIsLoaded, project } from 'esri/geometry/projection';
+import { geodesicBuffer, offset } from 'esri/geometry/geometryEngine';
+import SpatialReference from 'esri/geometry/SpatialReference';
+
+// icons
 import { textLarge16 } from '@esri/calcite-ui-icons/js/textLarge16.js';
 
 // widget styles
@@ -55,6 +62,11 @@ const CSS = {
   button: 'esri-button',
   widgetButton: 'esri-widget--button',
   input: 'esri-input',
+  select: 'esri-select',
+  form: 'cov-form',
+  formDisabled: 'disabled',
+  formRow: 'cov-form--row',
+  formControl: 'cov-form--control',
 };
 
 @subclass('cov.widgets.Markup')
@@ -83,6 +95,9 @@ export default class Markup extends Widget {
       listMode: 'hide',
     }),
   });
+
+  @property()
+  offsetProjectionWkid = 26910;
 
   @property()
   projectsWidget: any;
@@ -145,6 +160,12 @@ export default class Markup extends Widget {
   @property()
   private _text = false;
 
+  // UVM for tools selects
+  @property({
+    type: UnitsViewModel,
+  })
+  private _units = new UnitsViewModel();
+
   // active tab
   @property()
   @renderable()
@@ -174,7 +195,7 @@ export default class Markup extends Widget {
     const layer = graphic.layer as esri.FeatureLayer;
     (layer as esri.FeatureLayer)
       .queryFeatures({
-        where: `${layer.objectIdField} = ${graphic.attributes[layer.objectIdField]}`,
+        objectIds: [graphic.attributes[layer.objectIdField]],
         outFields: [layer.objectIdField],
         returnGeometry: true,
       })
@@ -260,6 +281,11 @@ export default class Markup extends Widget {
           break;
       }
     });
+
+    // load projection
+    if (!projectionIsLoaded()) {
+      projectionLoad();
+    }
   }
 
   /**
@@ -447,18 +473,166 @@ export default class Markup extends Widget {
     }
   }
 
-  render(): tsx.JSX.Element {
-    const { id, view, _selectedFeature } = this;
+  /**
+   * Buffer selected graphic.
+   * @param evt
+   */
+  private _buffer(evt: Event) {
+    evt.preventDefault();
+    const target = evt.target as HTMLFormElement;
+    const {
+      DIST: { value: distance },
+      UNIT: { value: unit },
+    } = target;
+    const { view, _selectedFeature: feature } = this;
+    if (!feature || !view.popup.visible) return;
+    const {
+      layer,
+      layer: { type: layerType },
+      geometry,
+    } = feature;
+    if (layerType === 'graphics') {
+      this._add(
+        new Graphic({
+          geometry: geodesicBuffer(geometry, target.DIST.value, target.UNIT.value) as esri.Polygon,
+        }),
+      );
+    } else if (layerType === 'feature') {
+      (layer as esri.FeatureLayer)
+        .queryFeatures({
+          objectIds: [feature.attributes[(layer as esri.FeatureLayer).objectIdField]],
+          outFields: [(layer as esri.FeatureLayer).objectIdField],
+          returnGeometry: true,
+          outSpatialReference: view.spatialReference,
+        })
+        .then((result: esri.FeatureSet) => {
+          if (!result.features[0]) return;
+          this._add(
+            new Graphic({
+              geometry: geodesicBuffer(result.features[0].geometry, distance, unit) as esri.Polygon,
+            }),
+          );
+        });
+    }
+  }
 
+  /**
+   * Offset selected graphic.
+   * @param evt
+   */
+  private _offset(evt: Event) {
+    evt.preventDefault();
+    const target = evt.target as HTMLFormElement;
+    const {
+      DIST: { value: distance },
+      UNIT: { value: unit },
+      SIDE: { value: side },
+      JOIN: { value: join },
+    } = target;
+    const {
+      view,
+      view: { spatialReference },
+      _selectedFeature: feature,
+    } = this;
+    if (!feature || !view.popup.visible) return;
+    const {
+      layer,
+      layer: { type: layerType },
+      geometry,
+    } = feature;
+    if (layerType === 'graphics') {
+      this._offsetGeometry(geometry as esri.Polyline, distance, unit, side, join);
+    } else if (layerType === 'feature') {
+      (layer as esri.FeatureLayer)
+        .queryFeatures({
+          objectIds: [feature.attributes[(layer as esri.FeatureLayer).objectIdField]],
+          outFields: [(layer as esri.FeatureLayer).objectIdField],
+          returnGeometry: true,
+          outSpatialReference: spatialReference,
+        })
+        .then((result: esri.FeatureSet) => {
+          if (!result.features[0]) return;
+          this._offsetGeometry(result.features[0].geometry as esri.Polyline, distance, unit, side, join);
+        });
+    }
+  }
+
+  /**
+   * Complete offset.
+   * @param geometry
+   * @param distance
+   * @param unit
+   * @param side
+   * @param join
+   */
+  private _offsetGeometry(
+    geometry: esri.Polyline,
+    distance: number,
+    unit: number | 'meters' | 'feet' | 'kilometers' | 'miles' | 'nautical-miles' | 'yards',
+    side: 'both' | 'right' | 'left',
+    join: 'round' | 'bevel' | 'miter' | 'square',
+  ): void {
+    let left;
+    let right;
+    const {
+      view: { spatialReference },
+      offsetProjectionWkid,
+    } = this;
+
+    const projectedGeometry = project(
+      geometry,
+      new SpatialReference({
+        wkid: offsetProjectionWkid,
+      }),
+    );
+
+    switch (side) {
+      case 'both':
+        left = offset(projectedGeometry, distance * -1, unit, join);
+        right = offset(projectedGeometry, distance, unit, join);
+        break;
+      case 'right':
+        right = offset(projectedGeometry, distance, unit, join);
+        break;
+      case 'left':
+        left = offset(projectedGeometry, distance * -1, unit, join);
+        break;
+    }
+
+    if (left) {
+      this._add(
+        new Graphic({
+          geometry: project(left, spatialReference) as esri.Polyline,
+        }),
+      );
+    }
+
+    if (right) {
+      this._add(
+        new Graphic({
+          geometry: project(right, spatialReference) as esri.Polyline,
+        }),
+      );
+    }
+  }
+
+  render(): tsx.JSX.Element {
+    const { id, view, _selectedFeature, _units } = this;
+
+    // add feature button enabled/disabled
     const addButtonClasses = this.classes(
       CSS.widgetButton,
       _selectedFeature && view.popup.visible && !this._isMarkup(_selectedFeature) ? '' : CSS.buttonDisabled,
     );
 
+    // edit markup buttons enabled/disabled
     const editButtonClasses = this.classes(
       CSS.widgetButton,
       _selectedFeature && view.popup.visible && this._isMarkup(_selectedFeature) ? '' : CSS.buttonDisabled,
     );
+
+    // offset form enabled/disabled (fieldset)
+    // const offsetFormClasses = _selectedFeature && _selectedFeature.geometry.type === 'polyline' && view.popup.visible ? '' : CSS.formDisabled;
 
     return (
       <div class={CSS.base}>
@@ -477,6 +651,14 @@ export default class Markup extends Widget {
             aria-selected={this._activeTab === 1 ? 'true' : 'false'}
             bind={this}
             onclick={() => (this._activeTab = 1)}
+          >
+            Tools
+          </li>
+          <li
+            id={`tab_${id}_tab_0`}
+            aria-selected={this._activeTab === 2 ? 'true' : 'false'}
+            bind={this}
+            onclick={() => (this._activeTab = 2)}
           >
             Projects
           </li>
@@ -584,12 +766,99 @@ export default class Markup extends Widget {
             </div>
             {/* end edit buttons */}
           </section>
-          {/* project */}
+          {/* tools */}
           <section
             class={CSS.tabsContent}
             aria-labelledby={`tab_${id}_tab_1`}
             role="tabcontent"
             style={`display:${this._activeTab === 1 ? 'block' : 'none'}`}
+          >
+            {/* buffer */}
+            <div>Buffer</div>
+            <form class={CSS.form} bind={this} onsubmit={(evt: Event) => this._buffer(evt)}>
+              <fieldset disabled={!(_selectedFeature && view.popup.visible)}>
+                <div class={CSS.formRow}>
+                  <div class={CSS.formControl}>
+                    <label>Distance</label>
+                    <input
+                      class={CSS.input}
+                      type="number"
+                      name="DIST"
+                      required
+                      value="250"
+                      step="0.1"
+                      placeholder="Distance"
+                    />
+                  </div>
+                  <div class={CSS.formControl}>
+                    <label>Unit</label>
+                    {_units.lengthSelect('UNIT')}
+                  </div>
+                </div>
+                <div class={CSS.formRow}>
+                  <button class={CSS.button} type="submit">
+                    Buffer
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+            {/* offset */}
+            <div>Offset</div>
+            <form class={CSS.form} bind={this} onsubmit={(evt: Event) => this._offset(evt)}>
+              <fieldset
+                disabled={!(_selectedFeature && _selectedFeature.geometry.type === 'polyline' && view.popup.visible)}
+              >
+                <div class={CSS.formRow}>
+                  <div class={CSS.formControl}>
+                    <label>Distance</label>
+                    <input
+                      class={CSS.input}
+                      type="number"
+                      name="DIST"
+                      required
+                      value="30"
+                      step="1"
+                      placeholder="Distance"
+                    />
+                  </div>
+                  <div class={CSS.formControl}>
+                    <label>Unit</label>
+                    {_units.lengthSelect('UNIT')}
+                  </div>
+                </div>
+                <div class={CSS.formRow}>
+                  <div class={CSS.formControl}>
+                    <label>Sides</label>
+                    <select class={CSS.select} name="SIDE">
+                      <option value="both">Both</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                  <div class={CSS.formControl}>
+                    <label>Join</label>
+                    <select class={CSS.select} name="JOIN">
+                      <option value="miter">Miter</option>
+                      <option value="round">Round</option>
+                      <option value="bevel">Bevel</option>
+                      <option value="square">Square</option>
+                    </select>
+                  </div>
+                </div>
+                <div class={CSS.formRow}>
+                  <button class={CSS.button} type="submit">
+                    Offset
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </section>
+          {/* project */}
+          <section
+            class={CSS.tabsContent}
+            aria-labelledby={`tab_${id}_tab_2`}
+            role="tabcontent"
+            style={`display:${this._activeTab === 2 ? 'block' : 'none'}`}
           >
             {this.projectsWidget ? (
               <div
