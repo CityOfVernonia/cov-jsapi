@@ -159,17 +159,37 @@ export default class Markup extends Widget {
   }
 
   /**
-   * Add any non-markup graphic as markup graphic.
-   * @param graphic esri.Graphic
+   * Adds feature layer feature to proper markup layer.
+   * Will use selected feature if `graphic` is not provided and feature is selected and popup is open.
+   * @param graphic
    */
   addGraphicToMarkup(graphic?: Graphic): void {
     const { view, _selectedFeature } = this;
     if (!graphic && view.popup.visible && _selectedFeature) {
       graphic = _selectedFeature as Graphic;
-    } else if (!graphic || this._isMarkup(graphic)) {
+    } else if (!graphic || this._isMarkup(graphic) || !graphic.layer || graphic.layer.type !== 'feature') {
       return;
     }
-    this._add(graphic);
+    // query feature to get exact geometry
+    const layer = graphic.layer as esri.FeatureLayer;
+    (layer as esri.FeatureLayer)
+      .queryFeatures({
+        where: `${layer.objectIdField} = ${graphic.attributes[layer.objectIdField]}`,
+        outFields: [layer.objectIdField],
+        returnGeometry: true,
+      })
+      .then((result: esri.FeatureSet) => {
+        if (!result.features[0]) return;
+        this._add(result.features[0]);
+      });
+  }
+
+  /**
+   * Courtesy method to cancel SVM when a parent widget hides/closes this widget.
+   */
+  onHide(): void {
+    const { sketchViewModel } = this;
+    if (sketchViewModel.state !== 'ready') sketchViewModel.cancel();
   }
 
   private _initialize(): void {
@@ -184,6 +204,7 @@ export default class Markup extends Widget {
       });
     }
 
+    // set project widget properties
     if (projectsWidget) {
       projectsWidget.text = text;
       projectsWidget.point = point;

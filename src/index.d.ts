@@ -485,6 +485,8 @@ declare namespace __cov {
     textSymbol: TextSymbol;
     sketchViewModel: SketchViewModel;
     projectsWidget: any;
+    addGraphicToMarkup(graphic?: esri.Graphic): () => void;
+    onHide(): () => void;
     readonly layers: esri.GroupLayer;
     readonly text: esri.GraphicsLayer;
     readonly point: esri.GraphicsLayer;
