@@ -196,8 +196,9 @@ export default class Markup extends Widget {
     // add layers to map
     map.add(layers);
     // watch `layers` and stick group layer as top layer
-    watch(map, 'layers.length', () => {
-      if (map.layers.indexOf(layers) !== 0) map.layers.reorder(layers, 0);
+    watch(map, 'layers.length', (value: number) => {
+      const index = value - 1;
+      if (map.layers.indexOf(layers) !== index) map.layers.reorder(layers, index);
     });
 
     // sketch view model
