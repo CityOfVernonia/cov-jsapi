@@ -28,7 +28,8 @@
   },
   "types": [
     "arcgis-js-api",
-    "js-cookie"
+    "js-cookie",
+    "pouchdb"
   ],
   "include": [
     "src/**/*"

@@ -30,6 +30,7 @@
     "@types/arcgis-js-api": "4.17.0",
     "@types/jest": "^26.0.13",
     "@types/js-cookie": "^2.2.6",
+    "@types/pouchdb": "6.3.2",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "clean-webpack-plugin": "^3.0.0",
@@ -56,7 +57,9 @@
     "@arcgis/webpack-plugin": "~4.17.4",
     "@esri/calcite-ui-icons": "^3.13.0",
     "bootswatch": "~4.5.2",
-    "js-cookie": "~2.2.1"
+    "js-cookie": "~2.2.1",
+    "pouchdb": "^7.2.2",
+    "pouchdb-browser": "^7.2.2"
   },
   "arcgis": {
     "type": "jsapi"

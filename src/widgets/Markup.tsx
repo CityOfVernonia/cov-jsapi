@@ -14,6 +14,8 @@ export interface MarkupProperties extends esri.WidgetProperties {
    * Provide to set any non-SVM properties, most notably default symbols.
    */
   sketchViewModel?: SketchViewModel;
+
+  projectsWidget?: any;
 }
 
 // core modules
@@ -94,11 +96,14 @@ export default class Markup extends Widget {
   @property({
     type: SketchViewModel,
   })
-  readonly sketchViewModel: SketchViewModel = new SketchViewModel({
+  sketchViewModel: SketchViewModel = new SketchViewModel({
     layer: new GraphicsLayer({
       listMode: 'hide',
     }),
   });
+
+  @property()
+  projectsWidget: any;
 
   /**
    * Layers.
@@ -165,7 +170,6 @@ export default class Markup extends Widget {
 
   constructor(properties?: MarkupProperties) {
     super(properties);
-    console.log(textLarge16);
   }
 
   postInitialize(): void {
@@ -187,7 +191,7 @@ export default class Markup extends Widget {
   }
 
   private _initialize(): void {
-    const { view, sketchViewModel, layers, point, polyline, polygon, text } = this;
+    const { view, sketchViewModel, projectsWidget, layers, point, polyline, polygon, text } = this;
     let { sketch } = this;
     const { map } = view;
 
@@ -196,6 +200,13 @@ export default class Markup extends Widget {
       sketch = new GraphicsLayer({
         listMode: 'hide',
       });
+    }
+
+    if (projectsWidget) {
+      projectsWidget.text = text;
+      projectsWidget.point = point;
+      projectsWidget.polygon = polygon;
+      projectsWidget.polyline = polyline;
     }
 
     // widget layers
@@ -575,7 +586,17 @@ export default class Markup extends Widget {
             aria-labelledby={`tab_${id}_tab_1`}
             role="tabcontent"
             style={`display:${this._activeTab === 1 ? 'block' : 'none'}`}
-          ></section>
+          >
+            {this.projectsWidget ? (
+              <div
+                afterCreate={(div: HTMLDivElement) => {
+                  this.projectsWidget.container = div;
+                }}
+              ></div>
+            ) : (
+              <p>No projects interface available.</p>
+            )}
+          </section>
         </main>
       </div>
     );
