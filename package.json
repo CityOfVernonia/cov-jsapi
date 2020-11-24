@@ -1,6 +1,6 @@
 {
   "name": "cov-jsapi",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "City of Vernonia for Esri's JavaScript API.",
   "scripts": {
     "build": "npx tsc && npx node-sass src/css/__test.scss > dist/test.css",

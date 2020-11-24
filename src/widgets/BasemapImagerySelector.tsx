@@ -44,15 +44,15 @@ export default class BasemapImagerySelector extends Widget {
   }
 
   postInitialize(): void {
-    const {basemap, defaultImageryTitle, imageryLayerIndex } = this;
-    let { basemaps } = this;
+    const { basemap, basemaps, defaultImageryTitle, imageryLayerIndex } = this;
     // cast array of basemaps as collection
     if (basemaps && Collection.isCollection(basemaps) === false) {
-      basemaps = new Collection(basemaps);
+      // must set `this.basemaps` directly - let deconstruction will not work
+      this.basemaps = new Collection(basemaps);
     }
     // add default layer to collection
     whenOnce(basemap, 'loaded', () => {
-      (basemaps as Collection<cov.BasemapImagerySelectorBasemap>).add(
+      (this.basemaps as Collection<cov.BasemapImagerySelectorBasemap>).add(
         {
           layer: basemap.baseLayers.getItemAt(imageryLayerIndex) as
             | esri.ImageryLayer
@@ -79,7 +79,11 @@ export default class BasemapImagerySelector extends Widget {
     return (this.basemaps as Collection<cov.BasemapImagerySelectorBasemap>)
       .toArray()
       .map((selectorBasemap: cov.BasemapImagerySelectorBasemap) => {
-        const { view: { map }, basemap, imageryLayerIndex } = this;
+        const {
+          view: { map },
+          basemap,
+          imageryLayerIndex,
+        } = this;
         const isCurrentLayer = selectorBasemap.layer === basemap.baseLayers.getItemAt(imageryLayerIndex);
         return (
           <li
@@ -91,9 +95,8 @@ export default class BasemapImagerySelector extends Widget {
               // this may not work if imagery layer isn't at index 0 but when would that ever be the case?
               basemap.baseLayers.removeAt(imageryLayerIndex);
               basemap.baseLayers.add(selectorBasemap.layer, imageryLayerIndex);
-              if (map.basemap !== basemap) {
-                map.set('basemap', basemap);
-              }
+              // set map's basemap if not this basemap
+              if (map.basemap !== basemap) map.set('basemap', basemap);
             }}
           >
             <span

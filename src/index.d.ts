@@ -429,7 +429,7 @@ declare namespace __cov {
      * Map or scene view;
      */
     view?: esri.MapView | esri.SceneView;
-    
+
     /**
      * The basemap to switch imagery layer.
      */
