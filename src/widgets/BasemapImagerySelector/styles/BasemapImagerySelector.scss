@@ -31,6 +31,7 @@
   }
 }
 
-// .cov-basemap-imagery-selector--title {
-  
-// }
+.cov-basemap-imagery-selector--title {
+  user-select: none;
+  cursor: pointer;
+}

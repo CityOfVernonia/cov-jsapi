@@ -426,6 +426,11 @@ declare namespace __cov {
 
   export interface BasemapImagerySelectorProperties extends esri.WidgetProperties {
     /**
+     * Map or scene view;
+     */
+    view?: esri.MapView | esri.SceneView;
+    
+    /**
      * The basemap to switch imagery layer.
      */
     basemap: esri.Basemap;
@@ -451,6 +456,7 @@ declare namespace __cov {
 
   export class BasemapImagerySelector extends esri.Widget {
     constructor(properties: BasemapImagerySelectorProperties);
+    view: esri.MapView | esri.SceneView;
     basemap: esri.Basemap;
     imageryLayerIndex: number;
     defaultImageryTitle: string;
