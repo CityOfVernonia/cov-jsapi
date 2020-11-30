@@ -21,6 +21,7 @@ declare namespace __cov {
   }
 
   export class TaxMapPopup extends esri.PopupTemplate {
+    constructor(properties: TaxMapPopupProperties);
     taxMapsLayer: esri.MapImageLayer;
   }
 
