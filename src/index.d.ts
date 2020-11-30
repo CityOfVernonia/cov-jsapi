@@ -13,6 +13,17 @@ declare namespace __cov {
 
   export class WaterMeterPopup extends esri.PopupTemplate {}
 
+  export interface TaxMapPopupProperties extends esri.PopupTemplateProperties {
+    /**
+     * Layer with tax map images.
+     */
+    taxMapsLayer: esri.MapImageLayer;
+  }
+
+  export class TaxMapPopup extends esri.PopupTemplate {
+    taxMapsLayer: esri.MapImageLayer;
+  }
+
   ///////////////////////////////////////////////////////////////////
   // view models
   ///////////////////////////////////////////////////////////////////
@@ -531,6 +542,11 @@ declare namespace __cov {
 declare module 'cov/popups/TaxLotPopup' {
   import TaxLotPopup = __cov.TaxLotPopup;
   export = TaxLotPopup;
+}
+
+declare module 'cov/popups/TaxMapPopup' {
+  import TaxMapPopup = __cov.TaxMapPopup;
+  export = TaxMapPopup;
 }
 
 declare module 'cov/popups/WaterMeterPopup' {

@@ -80,7 +80,7 @@ export default class BasemapImagerySelector extends Widget {
       .toArray()
       .map((selectorBasemap: cov.BasemapImagerySelectorBasemap) => {
         const {
-          view: { map },
+          // view: { map },
           basemap,
           imageryLayerIndex,
         } = this;
@@ -95,8 +95,10 @@ export default class BasemapImagerySelector extends Widget {
               // this may not work if imagery layer isn't at index 0 but when would that ever be the case?
               basemap.baseLayers.removeAt(imageryLayerIndex);
               basemap.baseLayers.add(selectorBasemap.layer, imageryLayerIndex);
+
+              // TODO: handle BasemapToggle setting basemap if basemap is nextBasemap
               // set map's basemap if not this basemap
-              if (map.basemap !== basemap) map.set('basemap', basemap);
+              // if (map.basemap !== basemap) map.set('basemap', basemap);
             }}
           >
             <span

@@ -14,6 +14,22 @@
   }
 }
 
+// button row
+.cov-form--button-row {
+  display: flex;
+  flex-flow: row;
+  button, .esri-button {
+    width: 100%;
+    margin: 0 0.25rem;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 // row
 .cov-form--row {
   display: flex;
