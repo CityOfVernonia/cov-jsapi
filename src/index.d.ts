@@ -448,6 +448,11 @@ declare namespace __cov {
     basemap: esri.Basemap;
 
     /**
+     * BasemapToggle instance to check for nextBasemap.
+     */
+    basemapToggle?: esri.BasemapToggle;
+
+    /**
      * The index of the imagery layer to swap out.
      * @default 0 (assumes imagery is first layer)
      */
@@ -470,6 +475,7 @@ declare namespace __cov {
     constructor(properties: BasemapImagerySelectorProperties);
     view: esri.MapView | esri.SceneView;
     basemap: esri.Basemap;
+    basemapToggle: esri.BasemapToggle;
     imageryLayerIndex: number;
     defaultImageryTitle: string;
     basemaps: esri.Collection<BasemapImagerySelectorBasemap>;
