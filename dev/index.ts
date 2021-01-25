@@ -1,7 +1,39 @@
-
-
-// TaxMapPopup
+///////////////////////////////////////////////////////////////////////////////////////
+// TaxLotPopup
+///////////////////////////////////////////////////////////////////////////////////////
 import esriConfig from 'esri/config';
+import FeatureLayer from 'esri/layers/FeatureLayer';
+import Map from 'esri/Map';
+import PortalItem from 'esri/portal/PortalItem';
+import MapView from 'esri/views/MapView';
+
+import TaxLotPopup from '../src/popups/TaxLotPopup';
+
+esriConfig.portalUrl = 'https://gisportal.vernonia-or.gov/portal';
+
+const taxLots = new FeatureLayer({
+  portalItem: new PortalItem({
+    id: '2c2da300ecf34e679201059c51a16bbb',
+  }),
+  popupTemplate: new TaxLotPopup(),
+});
+
+const view = new MapView({
+  map: new Map({
+    basemap: 'streets-vector',
+    layers: [
+      taxLots,
+    ],
+  }),
+  center: [-123.183, 45.862],
+  zoom: 14,
+  container: document.querySelector('div[data-cov-app]') as HTMLDivElement,
+});
+
+///////////////////////////////////////////////////////////////////////////////////////
+// TaxMapPopup
+///////////////////////////////////////////////////////////////////////////////////////
+/* import esriConfig from 'esri/config';
 import FeatureLayer from 'esri/layers/FeatureLayer';
 import MapImageLayer from 'esri/layers/MapImageLayer';
 import Map from 'esri/Map';
@@ -42,7 +74,7 @@ const view = new MapView({
   center: [-123.183, 45.862],
   zoom: 14,
   container: document.querySelector('div[data-cov-app]') as HTMLDivElement,
-});
+}); */
 
 /*
 // Markup dev
