@@ -108,8 +108,15 @@ export default class OAuthViewModel extends Accessor {
               // check local storage
               const localStorageAuth = localStorage.getItem(LS_CRED);
               if (localStorageAuth) {
+                const cred = JSON.parse(localStorageAuth);
+                // check for stored credentials with null values
+                if (!cred.token) {
+                  localStorage.removeItem(LS_CRED);
+                  resolve(false);
+                  return;
+                }
                 // register token
-                esriId.registerToken(JSON.parse(localStorageAuth));
+                esriId.registerToken(cred);
                 // check for sign in
                 esriId
                   .checkSignInStatus(this.portal.url)
