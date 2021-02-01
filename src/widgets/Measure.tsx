@@ -55,6 +55,10 @@ const CSS = {
   button: 'esri-button',
   select: 'esri-select',
 
+  checkboxInput: 'cov-measure--checkbox-input',
+  checked: 'esri-icon-checkbox-checked',
+  unchecked: 'esri-icon-checkbox-unchecked',
+
   result: 'cov-measure--result',
 };
 
@@ -109,6 +113,10 @@ export default class Measure extends Widget {
   private _elevCenterHandle: esri.PausableWatchHandle;
   @property()
   private _elevFormatHandle: esri.PausableWatchHandle;
+
+  @property()
+  @renderable()
+  private _showLabels = false;
 
   @property()
   @renderable()
@@ -279,6 +287,18 @@ export default class Measure extends Widget {
               </div>
               <div class={CSS.formControl}>{units.areaSelect(null, 'Select Area Unit')}</div>
             </div>
+            <div class={CSS.formRow}>
+              <label class={CSS.checkboxInput}>
+                <span
+                  class={this._showLabels ? CSS.checked : CSS.unchecked}
+                  bind={this}
+                  onclick={() => {
+                    this._showLabels = !this._showLabels;
+                  }}
+                ></span>
+                Show labels
+              </label>
+            </div>
             {measureResult}
           </section>
 
@@ -296,6 +316,18 @@ export default class Measure extends Widget {
                 </button>
               </div>
               <div class={CSS.formControl}>{units.locationSelect(null, 'Select Coordinate Unit')}</div>
+            </div>
+            <div class={CSS.formRow}>
+              <label class={CSS.checkboxInput}>
+                <span
+                  class={this._showLabels ? CSS.checked : CSS.unchecked}
+                  bind={this}
+                  onclick={() => {
+                    this._showLabels = !this._showLabels;
+                  }}
+                ></span>
+                Show labels
+              </label>
             </div>
             <div class={CSS.result}>
               <p>
@@ -326,6 +358,18 @@ export default class Measure extends Widget {
                 </button>
               </div>
               <div class={CSS.formControl}>{units.elevationSelect(null, 'Select Elevation Unit')}</div>
+            </div>
+            <div class={CSS.formRow}>
+              <label class={CSS.checkboxInput}>
+                <span
+                  class={this._showLabels ? CSS.checked : CSS.unchecked}
+                  bind={this}
+                  onclick={() => {
+                    this._showLabels = !this._showLabels;
+                  }}
+                ></span>
+                Show labels
+              </label>
             </div>
             <div class={CSS.result}>
               <p>
@@ -502,6 +546,9 @@ export default class Measure extends Widget {
 
   // add text to graphics layer
   private _addTextGraphic(geometry: Point | Polyline | Polygon, text: string) {
+    if (!this._showLabels) {
+      return;
+    }
     switch (geometry.type) {
       case 'polyline':
         geometry = this._polylineMidpoint(geometry);

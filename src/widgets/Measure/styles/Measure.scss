@@ -10,3 +10,19 @@
     margin-top: 8px;
   }
 }
+
+.cov-measure--checkbox-input {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  
+  span {
+    margin-right: 0.25rem;
+    cursor: pointer;
+    user-select: none;
+    color: $button-color;
+    &:hover {
+      color: $button-color--hover;
+    }
+  }
+}

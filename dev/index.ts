@@ -1,7 +1,34 @@
 ///////////////////////////////////////////////////////////////////////////////////////
+// Measure
+///////////////////////////////////////////////////////////////////////////////////////
+import Map from 'esri/Map';
+import MapView from 'esri/views/MapView';
+import Measure from './../src/widgets/Measure';
+
+const view = new MapView({
+  map: new Map({
+    basemap: 'streets-vector',
+    layers: [],
+  }),
+  center: [-123.183, 45.862],
+  zoom: 14,
+  container: document.querySelector('div[data-cov-app]') as HTMLDivElement,
+});
+
+view.when(() => {
+  view.ui.add(
+    new Measure({
+      view,
+      elevationLayer: '',
+    }),
+    'top-right',
+  );
+});
+
+///////////////////////////////////////////////////////////////////////////////////////
 // TaxLotPopup
 ///////////////////////////////////////////////////////////////////////////////////////
-import esriConfig from 'esri/config';
+/*import esriConfig from 'esri/config';
 import FeatureLayer from 'esri/layers/FeatureLayer';
 import Map from 'esri/Map';
 import PortalItem from 'esri/portal/PortalItem';
@@ -28,7 +55,7 @@ const view = new MapView({
   center: [-123.183, 45.862],
   zoom: 14,
   container: document.querySelector('div[data-cov-app]') as HTMLDivElement,
-});
+});*/
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // TaxMapPopup
