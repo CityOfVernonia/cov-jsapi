@@ -175,7 +175,7 @@ class Content extends Widget {
               return (
                 <a
                   style="margin-right:0.75rem;"
-                  href={`http://www.helioncentral.com/columbiaat/MainQueryDetails.aspx?AccountID=${accountId}&QueryYear=2021&Roll=R`}
+                  href={`https://propertyquery.columbiacountyor.gov/columbiaat/MainQueryDetails.aspx?AccountID=${accountId}&QueryYear=2021&Roll=R`}
                   target="_blank"
                   rel="noopener"
                 >
