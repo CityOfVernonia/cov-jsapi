@@ -171,18 +171,20 @@ class Content extends Widget {
         <tr>
           <th class={CSS.th}>Tax Account(s)</th>
           <td class={CSS.td}>
-            {attributes.ACCOUNT_IDS.split(',').map((accountId: string) => {
-              return (
-                <a
-                  style="margin-right:0.75rem;"
-                  href={`https://propertyquery.columbiacountyor.gov/columbiaat/MainQueryDetails.aspx?AccountID=${accountId}&QueryYear=2021&Roll=R`}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  {accountId}
-                </a>
-              );
-            })}
+            {attributes.ACCOUNT_IDS
+              ? attributes.ACCOUNT_IDS.split(',').map((accountId: string) => {
+                  return (
+                    <a
+                      style="margin-right:0.75rem;"
+                      href={`https://propertyquery.columbiacountyor.gov/columbiaat/MainQueryDetails.aspx?AccountID=${accountId}&QueryYear=2021&Roll=R`}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {accountId}
+                    </a>
+                  );
+                })
+              : 'No related tax account'}
           </td>
         </tr>
         {/* assessor values */}
