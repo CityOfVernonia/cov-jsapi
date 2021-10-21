@@ -1,3 +1,7 @@
+# Archived
+
+Use https://github.com/CityOfVernonia/core.
+
 [![Build Status](https://travis-ci.com/CityOfVernonia/cov-jsapi.svg?branch=master)](https://travis-ci.com/CityOfVernonia/cov-jsapi) [![npm version](https://badge.fury.io/js/cov-jsapi.svg)](https://badge.fury.io/js/cov-jsapi)
 
 # cov-jsapi
